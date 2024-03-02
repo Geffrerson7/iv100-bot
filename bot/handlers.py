@@ -81,5 +81,6 @@ def send_pokemon_data_to_telegram():
     application.add_handler(CommandHandler("hello", hello))
     application.add_handler(CommandHandler("stop", stop))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hello))
-
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    
+    application.run_webhook(webhook_url="https://web-production-3070.up.railway.app/")
+    
