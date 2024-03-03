@@ -13,7 +13,6 @@ from data import config
 import traceback
 
 
-
 token = config.token
 is_start_active = False
 
