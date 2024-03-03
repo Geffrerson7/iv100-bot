@@ -82,5 +82,11 @@ def send_pokemon_data_to_telegram():
     application.add_handler(CommandHandler("stop", stop))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hello))
 
-    application.run_webhook(webhook_url="https://web-production-3070.up.railway.app/", timeout=60)
+    try:
+        print("El Bot de Telegram ahora se ejecutará en modo de webhook.")
+        application.run_webhook(webhook_url="https://web-production-3070.up.railway.app/")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+
+    
     
