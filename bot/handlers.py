@@ -86,9 +86,9 @@ def send_pokemon_data_to_telegram():
 
     try:
         print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
-        application.run_polling(allowed_updates=Update.ALL_TYPES)
+        application.run_polling(allowed_updates=Update.ALL_TYPES, timeout=30)
     except Exception as e:
-        logging.error("An error occurred during polling:", exc_info=True)
+        logging.error("An error occurred during polling: {e}", exc_info=True)
         traceback.print_exc()
 
 
