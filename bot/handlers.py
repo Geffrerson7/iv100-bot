@@ -10,6 +10,8 @@ from telegram import ReplyKeyboardMarkup
 import logging, asyncio
 from bot.service import send_pokemon_data
 from data import config
+import traceback
+
 
 
 token = config.token
@@ -85,9 +87,10 @@ def send_pokemon_data_to_telegram():
     try:
         print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
         application.run_polling(allowed_updates=Update.ALL_TYPES)
-        #application.run_webhook(webhook_url="https://web-production-3070.up.railway.app/")
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.error("An error occurred during polling:", exc_info=True)
+        traceback.print_exc()
+
 
     
     
