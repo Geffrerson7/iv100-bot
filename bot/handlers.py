@@ -50,7 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 await context.bot.send_message(
                     chat_id=update.effective_chat.id, text=text
                 )
-                await asyncio.sleep(1)  # Espera 1 segundo entre cada mensaje
+                await asyncio.sleep(2)  
             is_start_active = True
         else:
             await update.message.reply_text(
@@ -86,7 +86,7 @@ def send_pokemon_data_to_telegram():
 
     try:
         print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
-        application.run_polling(allowed_updates=Update.ALL_TYPES, timeout=30)
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
     except Exception as e:
         logging.error("An error occurred during polling: {e}", exc_info=True)
         traceback.print_exc()
