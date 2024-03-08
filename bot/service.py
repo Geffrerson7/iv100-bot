@@ -1,12 +1,6 @@
 import logging, requests, logging, time, json, datetime
 
 
-import logging
-import requests
-import time
-import json
-
-
 def get_data():
     """Obtains Pokémon data from multiple sources and returns a combined list of Pokémon with a 100% IV."""
     total_data = []
@@ -53,10 +47,6 @@ def get_data():
     return total_data
 
 
-import logging
-import requests
-
-
 def get_name(pokemon_id):
     """Gets the name of a Pokémon based on its ID using the PokeAPI."""
     try:
@@ -74,10 +64,6 @@ def get_name(pokemon_id):
         logging.error(f"Error decoding JSON response from PokeAPI: {e}")
 
     return None
-
-
-import logging
-import datetime
 
 
 def get_dsp(despawn):
