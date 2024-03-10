@@ -39,7 +39,6 @@ def get_data():
             data = response.json()
             for pokemon in data.get("pokemons", []):
                 total_data.append(pokemon)
-            time.sleep(1)
         except requests.exceptions.RequestException as e:
             logging.warning(f"Failed to fetch data from {url}: {e}")
         except json.decoder.JSONDecodeError as e:
