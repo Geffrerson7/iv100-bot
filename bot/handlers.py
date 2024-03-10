@@ -11,13 +11,17 @@ import logging, asyncio
 from bot.service import send_pokemon_data
 from data import config
 import traceback
-
+import html
+import json
+from telegram.constants import ParseMode
 
 token = config.token
+DEVELOPER_CHAT_ID = config.developer_chat_id
 is_start_active = False
+logger = logging.getLogger(__name__)
 
 
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global is_start_active
 
     if not is_start_active:
@@ -43,17 +47,24 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
 
     if not is_start_active:
-        total_text = send_pokemon_data()
-        if total_text:
-            for text in total_text:
-                await context.bot.send_message(
-                    chat_id=update.effective_chat.id, text=text
+        try:
+            total_text = send_pokemon_data()
+
+            if total_text:
+                for text in total_text:
+                    await context.bot.send_message(
+                        chat_id=update.effective_chat.id, text=text
+                    )
+                    await asyncio.sleep(2)
+                is_start_active = True
+            else:
+                await update.message.reply_text(
+                    f"{update.effective_user.first_name} espera unos segundos mientras encontramos pokemons"
                 )
-                await asyncio.sleep(2)  
-            is_start_active = True
-        else:
+        except Exception as e:
+            print(f"Error en send_pokemon_data(): {e}")  # Imprime el error
             await update.message.reply_text(
-                f"{update.effective_user.first_name} espera unos segundos mientras encontramos pokemons"
+                "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
             )
     else:
         await update.message.reply_text(
@@ -70,7 +81,29 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("El envío de coordenadas no está activa.")
 
 
-def send_pokemon_data_to_telegram():
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Log the error and send a telegram message to notify the developer."""
+
+    logger.error("Exception while handling an update:", exc_info=context.error)
+
+    tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
+    tb_string = "".join(tb_list)
+
+    update_str = update.to_dict() if isinstance(update, Update) else str(update)
+    message = (
+        "An exception was raised while handling an update\n"
+        f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}"
+        "</pre>\n\n"
+        f"<pre>context.chat_data = {html.escape(str(context.chat_data))}</pre>\n\n"
+        f"<pre>context.user_data = {html.escape(str(context.user_data))}</pre>\n\n"
+        f"<pre>{html.escape(tb_string)}</pre>"
+    )
+    await context.bot.send_message(
+        chat_id=DEVELOPER_CHAT_ID, text=message, parse_mode=ParseMode.HTML
+    )
+
+
+def run_bot():
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=logging.ERROR,
@@ -78,10 +111,13 @@ def send_pokemon_data_to_telegram():
 
     application = Application.builder().token(token).build()
 
+    application.add_error_handler(error_handler)
+
     application.add_handler(CommandHandler("iv100", start))
-    application.add_handler(CommandHandler("hello", hello))
     application.add_handler(CommandHandler("stop", stop))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hello))
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler)
+    )
 
     try:
         print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
@@ -89,7 +125,3 @@ def send_pokemon_data_to_telegram():
     except Exception as e:
         logging.error("An error occurred during polling: {e}", exc_info=True)
         traceback.print_exc()
-
-
-    
-    

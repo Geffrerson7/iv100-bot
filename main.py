@@ -1,8 +1,8 @@
-from bot.handlers import send_pokemon_data_to_telegram
+from bot.handlers import run_bot
 
 
 def main():
-    send_pokemon_data_to_telegram()
+    run_bot()
 
 
 if __name__ == "__main__":
