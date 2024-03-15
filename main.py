@@ -23,7 +23,7 @@ def add_handlers(dp):
 
 add_handlers(ptb)
 
-if config.DEBUG:
+if not config.DEBUG:
     @app.post("/")
     async def process_update(request: Request):
         req = await request.json()
