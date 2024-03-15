@@ -103,25 +103,33 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
     )
 
 
-def run_bot():
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.ERROR,
-    )
+# def run_bot():
+#     logging.basicConfig(
+#         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#         level=logging.ERROR,
+#     )
 
-    application = Application.builder().token(token).build()
+#     application = Application.builder().token(token).build()
 
+#     application.add_error_handler(error_handler)
+
+#     application.add_handler(CommandHandler("iv100", start))
+#     application.add_handler(CommandHandler("stop", stop))
+#     application.add_handler(
+#         MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler)
+#     )
+
+#     try:
+#         print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
+#         application.run_polling(allowed_updates=Update.ALL_TYPES)
+#     except Exception as e:
+#         logging.error("An error occurred during polling: {e}", exc_info=True)
+#         traceback.print_exc()
+
+def setup_handlers(application):
     application.add_error_handler(error_handler)
-
     application.add_handler(CommandHandler("iv100", start))
     application.add_handler(CommandHandler("stop", stop))
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler)
     )
-
-    try:
-        print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
-        application.run_polling(allowed_updates=Update.ALL_TYPES)
-    except Exception as e:
-        logging.error("An error occurred during polling: {e}", exc_info=True)
-        traceback.print_exc()
