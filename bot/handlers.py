@@ -1,29 +1,23 @@
 from telegram import Update
 from telegram.ext import (
-    CommandHandler,
-    Application,
     ContextTypes,
-    MessageHandler,
-    filters,
 )
 from telegram import ReplyKeyboardMarkup
-import logging, asyncio
-from bot.service import send_pokemon_data
+import logging
 from data import config
 import traceback
 import html
 import json
 from telegram.constants import ParseMode
 
-token = config.token
-DEVELOPER_CHAT_ID = config.developer_chat_id
+
+DEVELOPER_CHAT_ID = config.DEVELOPER_CHAT_ID
 is_start_active = False
 logger = logging.getLogger(__name__)
 
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global is_start_active
-    print(is_start_active)
     # Verificar si ya hay una instancia activa del bot
     if is_start_active:
         await update.message.reply_text(
@@ -44,44 +38,6 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     await update.message.reply_text(message_text, reply_markup=reply_markup)
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    global is_start_active
-
-    if not is_start_active:
-        try:
-            is_start_active = True  # Marcamos que la tarea está activa
-            print(is_start_active)
-            total_text = send_pokemon_data()
-
-            if total_text:
-                for text in total_text:
-                    await context.bot.send_message(
-                        chat_id=update.effective_chat.id, text=text
-                    )
-                    await asyncio.sleep(2)
-        except Exception as e:
-            print(f"Error en send_pokemon_data(): {e}")  # Imprime el error
-            await update.message.reply_text(
-                "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
-            )
-        finally:
-            is_start_active = False  # Marcamos que la tarea ha terminado
-    else:
-        await update.message.reply_text(
-            "Las coordenadas ya se están enviando. Si deseas detener el envío de coordenadas, usa /stop"
-        )
-
-
-async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    global is_start_active
-    if is_start_active:
-        is_start_active = False
-        await update.message.reply_text("El envío de coordenadas ha sido detenido.")
-    else:
-        await update.message.reply_text("El envío de coordenadas no está activa.")
-
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Log the error and send a telegram message to notify the developer."""
@@ -107,25 +63,3 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
     )
 
 
-def run_bot():
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.ERROR,
-    )
-
-    application = Application.builder().token(token).build()
-
-    application.add_error_handler(error_handler)
-
-    application.add_handler(CommandHandler("iv100", start))
-    application.add_handler(CommandHandler("stop", stop))
-    application.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler)
-    )
-
-    try:
-        print("El Bot de Telegram ahora se ejecutará en modo de run_polling.")
-        application.run_polling(allowed_updates=Update.ALL_TYPES)
-    except Exception as e:
-        logging.error("An error occurred during polling: {e}", exc_info=True)
-        traceback.print_exc()
