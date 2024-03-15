@@ -1,13 +1,7 @@
 import asyncio
 from bot.service import send_pokemon_data
 from telegram import Update
-from telegram.ext import (
-    CommandHandler,
-    Application,
-    ContextTypes,
-    MessageHandler,
-    filters,
-)
+from telegram.ext import ContextTypes
 
 is_start_active = False
 
@@ -38,7 +32,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
 
 
-async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def stop(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
     if is_start_active:
         is_start_active = False
