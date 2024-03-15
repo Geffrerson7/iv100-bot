@@ -4,5 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-token = os.environ.get("TOKEN")
-developer_chat_id = os.environ.get("DEVELOPER_CHAT_ID")
+TOKEN = os.environ.get("TOKEN")
+DEVELOPER_CHAT_ID = os.environ.get("DEVELOPER_CHAT_ID")
+DEBUG = os.environ.get("DEBUG")
+BOTHOST = os.environ.get("BOTHOST")
