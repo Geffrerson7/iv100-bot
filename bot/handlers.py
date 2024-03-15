@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global is_start_active
-
+    print(is_start_active)
     # Verificar si ya hay una instancia activa del bot
     if is_start_active:
         await update.message.reply_text(
@@ -52,6 +52,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not is_start_active:
         try:
             is_start_active = True  # Marcamos que la tarea está activa
+            print(is_start_active)
             total_text = send_pokemon_data()
 
             if total_text:
