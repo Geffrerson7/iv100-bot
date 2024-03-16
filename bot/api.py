@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from bot.ptb import lifespan
 
 
-app = FastAPI(lifespan=lifespan) if config.DEBUG else FastAPI()
+app =  FastAPI() if config.DEBUG else FastAPI(lifespan=lifespan)
 
 
 @app.get("/")

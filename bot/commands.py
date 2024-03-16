@@ -36,6 +36,5 @@ async def stop(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
     if is_start_active:
         is_start_active = False
-        await update.message.reply_text("El envío de coordenadas ha sido detenido.")
     else:
-        await update.message.reply_text("El envío de coordenadas no está activa.")
+        await update.message.reply_text("El envío de coordenadas ha sido detenido.")
