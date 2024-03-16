@@ -20,10 +20,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     )
                     await asyncio.sleep(2)
         except Exception as e:
-            print(f"Error en send_pokemon_data(): {e}")  
+            print(f"Error en send_pokemon_data(): {e}") 
             await update.message.reply_text(
                 "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
             )
+        finally:
+            is_start_active = False  
     else:
         await update.message.reply_text(
             "Las coordenadas ya se están enviando. Si deseas detener el envío de coordenadas, usa /stop"
@@ -33,7 +35,4 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def stop(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
     if not is_start_active:
-        await update.message.reply_text("El envío de coordenadas no está activa.")
-    else:
         await update.message.reply_text("El envío de coordenadas ha sido detenido.")
-        is_start_active = False
