@@ -5,14 +5,10 @@ import uvicorn
 from bot.endpoints import router as bot_router
 
 app = (
-    FastAPI() if config.DEBUG else FastAPI(lifespan=lifespan).include_router(bot_router)
+    FastAPI() if config.DEBUG == "True" else FastAPI(lifespan=lifespan)
 )
 
-
-@app.get("/")
-def home():
-    return "Hello world!"
-
+app.include_router(bot_router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
