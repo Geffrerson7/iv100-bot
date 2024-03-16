@@ -13,7 +13,7 @@ ptb = (
 if config.DEBUG:
     ptb = ptb.build()
 else:
-    ptb = ptb.updater(None)
+    ptb = ptb.updater(None).build()
 
 
 @asynccontextmanager
