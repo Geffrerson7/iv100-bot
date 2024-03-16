@@ -1,6 +1,6 @@
 from data import config
 from api import app
-import uvicorn, logging
+import uvicorn
 from http import HTTPStatus
 from telegram import Update
 from bot.ptb import ptb
@@ -12,6 +12,7 @@ from telegram.ext import (
 )
 from bot.handlers import error_handler, text_handler 
 from bot.commands import start, stop
+
 
 def add_handlers(dp):
     dp.add_error_handler(error_handler)
@@ -33,10 +34,6 @@ if not config.DEBUG:
 
 if __name__ == "__main__":
     if config.DEBUG:
-        logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.ERROR,
-    )
         ptb.run_polling(allowed_updates=Update.ALL_TYPES)
     else:
         uvicorn.run(app, host="0.0.0.0", port=8000)

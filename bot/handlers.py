@@ -3,18 +3,15 @@ from telegram.ext import (
     ContextTypes,
 )
 from telegram import ReplyKeyboardMarkup
-import logging
 from data import config
 import traceback
 import html
 import json
 from telegram.constants import ParseMode
-
+from common.log import logger
+from common.constans import is_start_active
 
 DEVELOPER_CHAT_ID = config.DEVELOPER_CHAT_ID
-is_start_active = False
-logger = logging.getLogger(__name__)
-
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global is_start_active

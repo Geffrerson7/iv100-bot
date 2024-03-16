@@ -2,8 +2,8 @@ import asyncio
 from bot.service import send_pokemon_data
 from telegram import Update
 from telegram.ext import ContextTypes
+from common.constans import is_start_active
 
-is_start_active = False
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
