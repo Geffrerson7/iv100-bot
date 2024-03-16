@@ -10,7 +10,7 @@ ptb = (
     .read_timeout(7)
     .get_updates_read_timeout(42)
 )
-if config.DEBUG:
+if config.DEBUG == "True":
     ptb = ptb.build()
 else:
     ptb = ptb.updater(None).build()

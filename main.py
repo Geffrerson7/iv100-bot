@@ -23,7 +23,7 @@ add_handlers(ptb)
 
 
 if __name__ == "__main__":
-    if config.DEBUG:
+    if config.DEBUG == "True":
         ptb.run_polling(allowed_updates=Update.ALL_TYPES)
     else:
         uvicorn.run(app, host="0.0.0.0", port=8000)
