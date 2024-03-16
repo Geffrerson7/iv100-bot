@@ -1,4 +1,4 @@
-# TELEGRAM-BOT
+# IV100-TELEGRAM-BOT
 
 ## Local Installation
 
@@ -8,17 +8,21 @@ To run this project, you'll need to add the following environment variables to y
 
 `DEVELOPER_CHAT_ID`
 
+`BOTHOST`
+
+`DEBUG`
+
 Clone the project
 
-````bash
+```bash
 $ git clone https://github.com/Geffrerson7/iv100.git
-````
+```
 
 Navigate to the project directory
 
 ```bash
 $ cd iv100
-````
+```
 
 Create a virtual environment
 
