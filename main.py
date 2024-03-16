@@ -1,5 +1,5 @@
 from data import config
-from bot.api import app
+from api import app
 import uvicorn, logging
 from http import HTTPStatus
 from telegram import Update
