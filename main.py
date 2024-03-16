@@ -31,6 +31,11 @@ if not config.DEBUG:
         update = Update.de_json(req, ptb.bot)
         await ptb.process_update(update)
         return Response(status_code=HTTPStatus.OK)
+    
+if not config.DEBUG:
+    @app.get("/bot")
+    def bot():
+        return "Hello bot!"
 
 if __name__ == "__main__":
     if config.DEBUG:
