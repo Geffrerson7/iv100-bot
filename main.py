@@ -37,7 +37,6 @@ if __name__ == "__main__":
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=logging.ERROR,
     )
-
         ptb.run_polling(allowed_updates=Update.ALL_TYPES)
     else:
         uvicorn.run(app, host="0.0.0.0", port=8000)
