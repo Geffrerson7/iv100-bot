@@ -5,7 +5,7 @@
     "buildCommand": "echo building!"
   },
   "deploy": {
-    "startCommand": "python main.py",
+    "startCommand": "gunicorn main:app -k uvicorn.workers.UvicornWorker --timeout 60",
     "healthcheckPath": "/",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE"
