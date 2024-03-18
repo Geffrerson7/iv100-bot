@@ -48,9 +48,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     "Se terminó de enviar las coordenadas. Si deseas que envíe más usa /iv100"
                 )
                 is_start_active = False
+
         except telegram.error.RetryAfter as e:
             await asyncio.sleep(e.retry_after)
+            await update.message.reply_text(
+                f"Se pausó temporalmente el envío de coordenadas debido a un límite de velocidad. "
+                f"Se reanudará automáticamente en {e.retry_after} segundos."
+            )
+            is_start_active = False
             await start(update, context)
+
+        except telegram.error.BadRequest as e:
+            print(f"Error de solicitud incorrecta: {e}")
+            await update.message.reply_text(
+                "Error de solicitud incorrecta al enviar los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
+            )
+
+        except telegram.error.TimedOut as e:
+            print(f"Error de tiempo de espera: {e}")
+            await update.message.reply_text(
+                "Se ha agotado el tiempo de espera al enviar los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
+            )
 
         except Exception as e:
             print(f"Error en send_pokemon_data(): {e}")
