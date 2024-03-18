@@ -55,8 +55,13 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
         f"<pre>context.user_data = {html.escape(str(context.user_data))}</pre>\n\n"
         f"<pre>{html.escape(tb_string)}</pre>"
     )
+
+    # Limitar la longitud del mensaje si es demasiado largo
+    max_message_length = 4000
+    if len(message) > max_message_length:
+        message = message[:max_message_length] + " [...Mensaje truncado debido a la longitud...]"
+
     await context.bot.send_message(
         chat_id=DEVELOPER_CHAT_ID, text=message, parse_mode=ParseMode.HTML
     )
-
 

@@ -15,6 +15,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
             if total_text:
                 for text in total_text:
+                    if not is_start_active:
+                        break
                     await context.bot.send_message(
                         chat_id=update.effective_chat.id, text=text
                     )
@@ -24,15 +26,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(
                 "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
             )
-        finally:
-            is_start_active = False  
-    else:
-        await update.message.reply_text(
-            "Las coordenadas ya se están enviando. Si deseas detener el envío de coordenadas, usa /stop"
-        )
-
 
 async def stop(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
-    if not is_start_active:
+
+    if is_start_active:
+        is_start_active = False
         await update.message.reply_text("El envío de coordenadas ha sido detenido.")
+    else:
+        await update.message.reply_text("El envío de coordenadas no está activo.")
+
