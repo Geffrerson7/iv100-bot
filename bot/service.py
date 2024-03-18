@@ -95,7 +95,7 @@ def send_pokemon_data():
         total_data = get_data()
 
         if total_data != []:
-            batch_size = 20  # Define el tamaño del lote
+            batch_size = 10  # Define el tamaño del lote
 
             for i in range(0, len(total_data), batch_size):
                 batch_data = total_data[i : i + batch_size]
