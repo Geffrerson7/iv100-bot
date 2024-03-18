@@ -95,7 +95,7 @@ def send_pokemon_data():
         total_data = get_data()
 
         if total_data != []:
-            batch_size = 2  # Define el tamaño del lote
+            batch_size = 33  # Define el tamaño del lote
 
             for i in range(0, len(total_data), batch_size):
                 batch_data = total_data[i : i + batch_size]
@@ -114,7 +114,6 @@ def send_pokemon_data():
 
                         message = f"🅐 {name} {gender_icon}{shiny_icon} 💯\n🅔L{level} CP {cp}\n🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀\n⌚ᴅsᴘ {dsp}\n{latitude},{longitude}"
                         total_message.append(message)
-                        time.sleep(2)
         else:
             logging.error("Pokemons not found")
     except Exception as e:

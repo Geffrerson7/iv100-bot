@@ -10,7 +10,8 @@ from data import config
 GRUPO_COORDENADAS_ID = int(config.CHAT_ID)
 
 # Lista de usuarios permitidos para activar los comandos
-USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)] 
+USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)]
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
@@ -22,40 +23,55 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     # Verificar si el mensaje proviene del grupo de coordenadas
     if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-        await update.message.reply_text("Los comandos solo pueden ser activados en el grupo de @top100galaxy1")
+        await update.message.reply_text(
+            "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+        )
         return
 
     if not is_start_active:
         try:
-            is_start_active = True  
+            is_start_active = True
             total_text = send_pokemon_data()
 
             if total_text:
+                await update.message.reply_text("Enviando coordenadas...")
                 for text in total_text:
                     if not is_start_active:
                         break
-                    await context.bot.send_message(
-                        chat_id=update.effective_chat.id,  # Cambiado a enviar al grupo de coordenadas
-                        text=text
+                    else:
+                        await context.bot.send_message(
+                        chat_id=update.effective_chat.id,
+                        text=text,
                     )
-                    await asyncio.sleep(2)
+                        await asyncio.sleep(2)
+                await update.message.reply_text("Se terminó de enviar las coordenadas. Si deseas que envíe más usa /iv100")
+                is_start_active = False
         except Exception as e:
-            print(f"Error en send_pokemon_data(): {e}") 
+            print(f"Error en send_pokemon_data(): {e}")
             await update.message.reply_text(
                 "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
             )
+    else:
+        await update.message.reply_text(
+            "Las coordenadas ya se están enviando. Si deseas detener el envío de coordenadas, usa /stop"
+        )
+
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global is_start_active
 
     # Verificar si el usuario está permitido para usar el comando
     if update.effective_user.id not in USUARIOS_PERMITIDOS:
-        await update.message.reply_text("No tienes permiso para detener el envío de coordenadas.")
+        await update.message.reply_text(
+            "No tienes permiso para detener el envío de coordenadas."
+        )
         return
 
     # Verificar si el mensaje proviene del grupo de coordenadas
     if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-        await update.message.reply_text("Los comandos solo pueden ser activados en el grupo de @top100galaxy1")
+        await update.message.reply_text(
+            "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+        )
         return
 
     if is_start_active:
