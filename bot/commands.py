@@ -51,10 +51,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(
                 "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
             )
-    else:
-        await update.message.reply_text(
-            "Las coordenadas ya se están enviando. Si deseas detener el envío de coordenadas, usa /stop"
-        )
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
