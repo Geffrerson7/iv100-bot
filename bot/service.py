@@ -108,12 +108,12 @@ def send_pokemon_data():
                         dsp = get_dsp(pokemon_data.get("despawn"))
                         latitude = pokemon_data.get("lat")
                         longitude = pokemon_data.get("lng")
-
                         gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
                         shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
 
                         message = f"🅐 {name} {gender_icon}{shiny_icon} 💯\n🅔L{level} CP {cp}\n🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀\n⌚ᴅsᴘ {dsp}\n{latitude},{longitude}"
                         total_message.append(message)
+                        time.sleep(2)
         else:
             logging.error("Pokemons not found")
     except Exception as e:
