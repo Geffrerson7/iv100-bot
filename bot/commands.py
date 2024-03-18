@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from common.constans import is_start_active
 from data import config
-
+import telegram
 
 # ID del grupo al que se enviarán las coordenadas
 GRUPO_COORDENADAS_ID = int(config.CHAT_ID)
@@ -40,12 +40,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                         break
                     else:
                         await context.bot.send_message(
-                        chat_id=update.effective_chat.id,
-                        text=text,
-                    )
+                            chat_id=update.effective_chat.id,
+                            text=text,
+                        )
                         await asyncio.sleep(2)
-                await update.message.reply_text("Se terminó de enviar las coordenadas. Si deseas que envíe más usa /iv100")
+                await update.message.reply_text(
+                    "Se terminó de enviar las coordenadas. Si deseas que envíe más usa /iv100"
+                )
                 is_start_active = False
+        except telegram.error.RetryAfter as e:
+            await asyncio.sleep(e.retry_after)
+            await start(update, context)
+
         except Exception as e:
             print(f"Error en send_pokemon_data(): {e}")
             await update.message.reply_text(
@@ -74,4 +80,6 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         is_start_active = False
         await update.message.reply_text("El envío de coordenadas ha sido detenido.")
     else:
-        await update.message.reply_text("El envío de coordenadas no está activo.")
+        await update.message.reply_text(
+            "Ya dejé de enviar coordenadas. Si quieres que siga enviando usa /iv100"
+        )
