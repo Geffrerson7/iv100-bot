@@ -1,7 +1,7 @@
 import logging, requests, logging, time, json, datetime
 
 
-def get_data():
+def fetch_pokemon_data():
     """Obtains Pokémon data from multiple sources and returns a combined list of Pokémon with a 100% IV."""
     total_data = []
     urls = [
@@ -48,7 +48,7 @@ def get_data():
     return total_data
 
 
-def get_name(pokemon_id):
+def retrieve_pokemon_name(pokemon_id):
     """Gets the name of a Pokémon based on its ID using the PokeAPI."""
     try:
         pokeapi_url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_id}"
@@ -67,7 +67,7 @@ def get_name(pokemon_id):
     return None
 
 
-def get_dsp(despawn):
+def calculate_remaining_time(despawn):
     """Obtains the despawn time and calculates the remaining time until then."""
     try:
         if despawn is None:
@@ -88,11 +88,11 @@ def get_dsp(despawn):
     return "N/A"  # Return a default value in case of an error
 
 
-def send_pokemon_data():
+def generate_pokemon_messages():
     """Retrieves Pokemon data, formats it into messages, and returns a list of formatted messages ready to be sent."""
     try:
         total_message = []
-        total_data = get_data()
+        total_data = fetch_pokemon_data()
 
         if total_data != []:
             batch_size = 2  # Define el tamaño del lote
@@ -101,11 +101,11 @@ def send_pokemon_data():
                 batch_data = total_data[i : i + batch_size]
 
                 for pokemon_data in batch_data:
-                    name = get_name(pokemon_data["pokemon_id"]).title()
+                    name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
                     if name:
                         level = pokemon_data.get("level")
                         cp = pokemon_data.get("cp")
-                        dsp = get_dsp(pokemon_data.get("despawn"))
+                        dsp = calculate_remaining_time(pokemon_data.get("despawn"))
                         latitude = pokemon_data.get("lat")
                         longitude = pokemon_data.get("lng")
                         gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
