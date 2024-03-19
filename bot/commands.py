@@ -1,5 +1,5 @@
 import asyncio
-from bot.service import send_pokemon_data
+from bot.service import generate_pokemon_messages
 from telegram import Update
 from telegram.ext import ContextTypes
 from common.constans import is_start_active
@@ -31,7 +31,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not is_start_active:
         try:
             is_start_active = True
-            total_text = send_pokemon_data()
+            total_text = generate_pokemon_messages()
 
             if total_text:
                 await update.message.reply_text("Enviando coordenadas...")
@@ -70,11 +70,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 "Se ha agotado el tiempo de espera al enviar los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
             )
 
-        except Exception as e:
-            print(f"Error en send_pokemon_data(): {e}")
-            await update.message.reply_text(
-                "Ocurrió un error al obtener los datos de los Pokémon. Por favor, inténtalo de nuevo más tarde."
+        except telegram.error.Conflict as e:
+            error_message = (
+                "Se ha producido un conflicto con otra operación. "
+                "Por favor, inténtalo de nuevo más tarde o verifica si hay otras operaciones en curso."
             )
+            print("Error de conflicto:", e)
+            await update.message.reply_text(error_message)
+
+        except Exception as e:
+            error_message = (
+                "Lo siento, ha ocurrido un error al procesar los datos de los Pokémon. "
+                "Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
+            )
+            print("Error en la obtención de datos de Pokémon:", e)
+            await update.message.reply_text(error_message)
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
