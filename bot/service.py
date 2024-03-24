@@ -70,24 +70,25 @@ def calculate_remaining_time(despawn):
     """Obtains the despawn time and calculates the remaining time until then."""
     try:
         if despawn is None:
-            return "N/A"
+            return None
         else:
             end_time_24h = datetime.datetime.fromtimestamp(despawn)
             current_time = datetime.datetime.now()
             remaining_time = end_time_24h - current_time
-
             seconds = round(remaining_time.total_seconds())
             minutes, seconds = divmod(seconds, 60)
-
+            if minutes < 0:
+                return None
             formatted_dsp = f"{minutes}:{seconds:02}"
             return formatted_dsp
     except Exception as e:
         logging.error(f"Error calculating despawn time: {e}")
 
-    return "N/A"  # Return a default value in case of an error
+    return None
 
 
 def retrieve_move_icon(move_type):
+    """Returns an emoji representing the type of a Pokémon move."""
     if move_type == "steel":
         icon = "⚙️"
     elif move_type == "water":
@@ -130,7 +131,7 @@ def retrieve_move_icon(move_type):
 
 
 def retrieve_pokemon_move(pokemon_move_id):
-    """Gets the move name of a Pokemon based on its ID using the PokeAPI."""
+    """Gets the move name of a Pokemon based on the move ID using the PokeAPI."""
     try:
         pokeapi_url = f"https://pokeapi.co/api/v2/move/{pokemon_move_id}"
         response = requests.get(pokeapi_url)
@@ -165,8 +166,8 @@ def generate_pokemon_messages():
 
                 for pokemon_data in batch_data:
                     dsp = calculate_remaining_time(pokemon_data.get("despawn"))
-                    
-                    if  dsp[0] != '-':
+
+                    if dsp:
                         level = pokemon_data.get("level")
                         cp = pokemon_data.get("cp")
                         name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
@@ -176,8 +177,12 @@ def generate_pokemon_messages():
                         shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
                         move1 = retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
                         move2 = retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
-                        move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))["icon"]
-                        move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))["icon"]
+                        move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))[
+                            "icon"
+                        ]
+                        move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))[
+                            "icon"
+                        ]
                         message = (
                             f"*🄰* {name} {shiny_icon}{gender_icon}\n"
                             f"*🄴* IV:💯 ᴄᴘ:{cp} LV:{level}\n"
