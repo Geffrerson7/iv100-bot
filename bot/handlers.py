@@ -9,24 +9,25 @@ import html
 import json
 from telegram.constants import ParseMode
 from common.log import logger
-from common.constans import is_start_active
+
 
 DEVELOPER_CHAT_ID = config.DEVELOPER_CHAT_ID
 # ID del grupo al que se enviarán las coordenadas
 GRUPO_COORDENADAS_ID = int(config.CHAT_ID)
 
 # Lista de usuarios permitidos para activar los comandos
-USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)] 
+USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)]
 
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    global is_start_active
 
     if update.message is None:
         return
     # Verificar si el mensaje proviene del grupo permitido
     if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-        await update.message.reply_text("Los comandos solo pueden ser activados en el grupo de @top100galaxy1")
+        await update.message.reply_text(
+            "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+        )
         return
 
     # Verificar si el usuario está permitido para usar el comando
@@ -34,8 +35,9 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("No tienes permiso para utilizar este comando.")
         return
 
-    # Verificar si ya hay una instancia activa del bot
-    if is_start_active:
+    job = context.chat_data.get("callback_coordinate")
+
+    if job:
         await update.message.reply_text(
             "Lo siento, ya hay una instancia activa del bot. Por favor, espera a que se detenga antes de iniciar otra."
         )
@@ -56,13 +58,8 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(message_text, reply_markup=reply_markup)
 
 
-async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Log the error and send a telegram message to notify the developer."""
-
-    # Verificar si el mensaje proviene del grupo permitido
-    if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-        return
-
     # Limitar la longitud del mensaje si es demasiado largo
     max_message_length = 4000
 
@@ -85,11 +82,13 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
         )
 
         if len(message) > max_message_length:
-            message = message[:max_message_length] + " [...Mensaje truncado debido a la longitud...]"
+            message = (
+                message[:max_message_length]
+                + " [...Mensaje truncado debido a la longitud...]"
+            )
 
         await context.bot.send_message(
             chat_id=DEVELOPER_CHAT_ID, text=message, parse_mode=ParseMode.HTML
         )
     except Exception as e:
-        print(f"Error en error_handler(): {e}") 
-
+        print(f"Error en error_handler(): {e}")

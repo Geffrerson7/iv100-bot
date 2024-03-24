@@ -39,7 +39,6 @@ def fetch_pokemon_data():
             data = response.json()
             for pokemon in data.get("pokemons", []):
                 total_data.append(pokemon)
-            time.sleep(2)
         except requests.exceptions.RequestException as e:
             logging.warning(f"Failed to fetch data from {url}: {e}")
         except json.decoder.JSONDecodeError as e:
@@ -113,7 +112,6 @@ def generate_pokemon_messages():
 
                         message = f"🅐 {name} {gender_icon}{shiny_icon} 💯\n🅔L{level} CP {cp}\n🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀\n⌚ᴅsᴘ {dsp}\n{latitude},{longitude}"
                         total_message.append(message)
-                        time.sleep(2)
         else:
             logging.error("Pokemons not found")
     except Exception as e:
