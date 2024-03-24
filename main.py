@@ -9,12 +9,12 @@ from telegram.ext import (
     filters,
 )
 from bot.handlers import error_handler, text_handler
-from bot.commands import callback_timer, stop
+from bot.commands import start, stop
 
 
 def add_handlers(dp):
     dp.add_error_handler(error_handler)
-    dp.add_handler(CommandHandler("iv100", callback_timer))
+    dp.add_handler(CommandHandler("iv100", start))
     dp.add_handler(CommandHandler("stop", stop))
     dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
 

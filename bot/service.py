@@ -79,12 +79,76 @@ def calculate_remaining_time(despawn):
             seconds = round(remaining_time.total_seconds())
             minutes, seconds = divmod(seconds, 60)
 
-            formatted_dsp = f"{minutes:02}:{seconds:02}"
+            formatted_dsp = f"{minutes}:{seconds:02}"
             return formatted_dsp
     except Exception as e:
         logging.error(f"Error calculating despawn time: {e}")
 
     return "N/A"  # Return a default value in case of an error
+
+
+def retrieve_move_icon(move_type):
+    if move_type == "steel":
+        icon = "⚙️"
+    elif move_type == "water":
+        icon = "💧"
+    elif move_type == "bug":
+        icon = "🐞"
+    elif move_type == "dragon":
+        icon = "🐲"
+    elif move_type == "electric":
+        icon = "⚡"
+    elif move_type == "ghost":
+        icon = "👻"
+    elif move_type == "fire":
+        icon = "🔥"
+    elif move_type == "ice":
+        icon = "❄️"
+    elif move_type == "fairy":
+        icon = "🌸"
+    elif move_type == "fighting":
+        icon = "🥊"
+    elif move_type == "normal":
+        icon = "🔘"
+    elif move_type == "grass":
+        icon = "🍃"
+    elif move_type == "psychic":
+        icon = "🔮"
+    elif move_type == "rock":
+        icon = "🪨"
+    elif move_type == "dark":
+        icon = "☯️"
+    elif move_type == "ground":
+        icon = "⛰️"
+    elif move_type == "poison":
+        icon = "☠️"
+    elif move_type == "flying":
+        icon = "☠️"
+    else:
+        icon = ""
+    return icon
+
+
+def retrieve_pokemon_move(pokemon_move_id):
+    """Gets the move name of a Pokemon based on its ID using the PokeAPI."""
+    try:
+        pokeapi_url = f"https://pokeapi.co/api/v2/move/{pokemon_move_id}"
+        response = requests.get(pokeapi_url)
+        response.raise_for_status()
+
+        data = response.json()
+        name = data["names"][5]["name"]
+        move_type = data["type"]["name"]
+        icon = retrieve_move_icon(move_type)
+        return {"name": name, "icon": icon}
+    except requests.exceptions.RequestException as e:
+        logging.warning(
+            f"Error fetching Pokemon move name for ID {pokemon_move_id}: {e}"
+        )
+    except ValueError as e:
+        logging.error(f"Error decoding JSON response from PokeAPI: {e}")
+
+    return None
 
 
 def generate_pokemon_messages():
@@ -100,17 +164,28 @@ def generate_pokemon_messages():
                 batch_data = total_data[i : i + batch_size]
 
                 for pokemon_data in batch_data:
-                    name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
-                    if name:
+                    dsp = calculate_remaining_time(pokemon_data.get("despawn"))
+                    
+                    if  dsp[0] != '-':
                         level = pokemon_data.get("level")
                         cp = pokemon_data.get("cp")
-                        dsp = calculate_remaining_time(pokemon_data.get("despawn"))
+                        name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
                         latitude = pokemon_data.get("lat")
                         longitude = pokemon_data.get("lng")
                         gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
                         shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
-
-                        message = f"🅐 {name} {gender_icon}{shiny_icon} 💯\n🅔L{level} CP {cp}\n🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀\n⌚ᴅsᴘ {dsp}\n{latitude},{longitude}"
+                        move1 = retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
+                        move2 = retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
+                        move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))["icon"]
+                        move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))["icon"]
+                        message = (
+                            f"*🄰* {name} {shiny_icon}{gender_icon}\n"
+                            f"*🄴* IV:💯 ᴄᴘ:{cp} LV:{level}\n"
+                            f"{move1_icon}{move1} / {move2_icon}{move2}\n"
+                            f"*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
+                            f"⌚ᴅsᴘ {dsp}\n"
+                            f"`{latitude},{longitude}`"
+                        )
                         total_message.append(message)
         else:
             logging.error("Pokemons not found")
