@@ -11,6 +11,7 @@ GRUPO_COORDENADAS_ID = int(config.CHAT_ID)
 # Lista de usuarios permitidos para activar los comandos
 USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)]
 
+PERIOD = int(config.PERIOD)
 
 async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
     total_text = generate_pokemon_messages()
@@ -27,7 +28,7 @@ async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
             await asyncio.sleep(2)
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
-            text="Se terminó de enviar las coordenadas. Dentro de 2 minutos se enviarán más.",
+            text=f"Se terminó de enviar las coordenadas. Dentro de {PERIOD} minutos se enviarán más.",
         )
 
 
@@ -55,7 +56,7 @@ async def callback_timer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 "En 10 segundos se enviarán las coordenadas..."
             )
             job = context.job_queue.run_repeating(
-                callback_coordinate, interval=120, first=10
+                callback_coordinate, interval=PERIOD*60, first=10
             )
             context.chat_data["callback_coordinate"] = job
 
