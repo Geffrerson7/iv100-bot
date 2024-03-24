@@ -13,6 +13,7 @@ USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)]
 
 PERIOD = int(config.PERIOD)
 
+
 async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
     total_text = generate_pokemon_messages()
 
@@ -22,12 +23,10 @@ async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
         )
         for text in total_text:
             await context.bot.send_message(
-                chat_id=GRUPO_COORDENADAS_ID,
-                text=text,
-                parse_mode='MarkdownV2'
+                chat_id=GRUPO_COORDENADAS_ID, text=text, parse_mode="MarkdownV2"
             )
             await asyncio.sleep(2)
-        await context.bot.send_message(
+        await context.bot.send_message(  # esta es la linea 30
             chat_id=GRUPO_COORDENADAS_ID,
             text=f"Se terminó de enviar las coordenadas. Dentro de {PERIOD} minutos se enviarán más.",
         )
@@ -57,7 +56,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 "En 10 segundos se enviarán las coordenadas..."
             )
             job = context.job_queue.run_repeating(
-                callback_coordinate, interval=PERIOD*60, first=10
+                callback_coordinate, interval=PERIOD * 60, first=10
             )
             context.chat_data["callback_coordinate"] = job
 
@@ -67,7 +66,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             f"Se pausó temporalmente el envío de coordenadas debido a un límite de velocidad. "
             f"Se reanudará automáticamente en {e.retry_after} segundos."
         )
-        await start(update, context)
+        if job:
+            job.schedule_removal()
+
+        job = context.job_queue.run_repeating(
+            callback_coordinate, interval=PERIOD * 60, first=10
+        )
+        context.chat_data["callback_coordinate"] = job
 
     except telegram.error.BadRequest as e:
         print(f"Error de solicitud incorrecta: {e}")
