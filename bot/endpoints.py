@@ -8,12 +8,12 @@ router = APIRouter()
 
 @router.get("/")
 def home():
-    return "Hello world!"
+    return "Hello, welcome to Adventure Elements!"
 
 if config.DEBUG == "False":
     @router.get("/bot")
     def bot():
-        return "Hello bot!"
+        return "Bot is running!\nClick to https://t.me/top100galaxy1"
 
     @router.post("/")
     async def process_update(request: Request):
