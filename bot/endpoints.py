@@ -13,7 +13,7 @@ def home():
 if config.DEBUG == "False":
     @router.get("/bot")
     def bot():
-        return "Bot is running!\nClick to https://t.me/top100galaxy1"
+        return "Bot is running!"
 
     @router.post("/")
     async def process_update(request: Request):

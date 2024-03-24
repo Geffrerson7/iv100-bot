@@ -24,6 +24,7 @@ async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(
                 chat_id=GRUPO_COORDENADAS_ID,
                 text=text,
+                parse_mode='MarkdownV2'
             )
             await asyncio.sleep(2)
         await context.bot.send_message(
@@ -32,7 +33,7 @@ async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
         )
 
 
-async def callback_timer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Verificar si el usuario está permitido para activar los comandos
     if update.effective_user.id not in USUARIOS_PERMITIDOS:
         await update.message.reply_text("No tienes permiso para activar los comandos.")
@@ -66,7 +67,7 @@ async def callback_timer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             f"Se pausó temporalmente el envío de coordenadas debido a un límite de velocidad. "
             f"Se reanudará automáticamente en {e.retry_after} segundos."
         )
-        await callback_timer(update, context)
+        await start(update, context)
 
     except telegram.error.BadRequest as e:
         print(f"Error de solicitud incorrecta: {e}")
