@@ -29,6 +29,11 @@ async def send_coordinates(context: ContextTypes.DEFAULT_TYPE, total_text: List[
             chat_id=GRUPO_COORDENADAS_ID,
             text=f"Se terminó de enviar las coordenadas. Dentro de {PERIOD} minutos se enviarán más.",
         )
+    else:
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            text=f"No se encontraron coordenadas. Dentro de {PERIOD} minutos buscaré más.",
+        )
 
 async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
     try:
