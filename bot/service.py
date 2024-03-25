@@ -124,7 +124,7 @@ def retrieve_move_icon(move_type):
     elif move_type == "poison":
         icon = "☠️"
     elif move_type == "flying":
-        icon = "☠️"
+        icon = "🪽"
     else:
         icon = ""
     return icon
