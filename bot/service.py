@@ -184,7 +184,7 @@ def generate_pokemon_messages():
                             "icon"
                         ]
                         message = (
-                            f"*🄰* {name} {shiny_icon}{gender_icon}\n"
+                            f"*🄰* `{name}` {shiny_icon}{gender_icon}\n"
                             f"*🄴* IV:💯 ᴄᴘ:{cp} LV:{level}\n"
                             f"{move1_icon}{move1} / {move2_icon}{move2}\n"
                             f"*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
