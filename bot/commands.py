@@ -26,7 +26,7 @@ async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
                 chat_id=GRUPO_COORDENADAS_ID, text=text, parse_mode="MarkdownV2"
             )
             await asyncio.sleep(2)
-        await context.bot.send_message(  # esta es la linea 30
+        await context.bot.send_message( 
             chat_id=GRUPO_COORDENADAS_ID,
             text=f"Se terminó de enviar las coordenadas. Dentro de {PERIOD} minutos se enviarán más.",
         )

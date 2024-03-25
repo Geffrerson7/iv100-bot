@@ -77,7 +77,7 @@ def calculate_remaining_time(despawn):
             remaining_time = end_time_24h - current_time
             seconds = round(remaining_time.total_seconds())
             minutes, seconds = divmod(seconds, 60)
-            if minutes < 0:
+            if minutes < 0 or seconds < 0:
                 return None
             formatted_dsp = f"{minutes}:{seconds:02}"
             return formatted_dsp
