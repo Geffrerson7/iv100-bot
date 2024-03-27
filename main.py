@@ -1,4 +1,4 @@
-from data import config
+from settings import config
 from api import app
 import uvicorn
 from telegram import Update

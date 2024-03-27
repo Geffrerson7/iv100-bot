@@ -66,7 +66,7 @@ def retrieve_pokemon_name(pokemon_id):
     return None
 
 
-def calculate_remaining_time(despawn):
+def calculate_remaining_time(despawn, delay):
     """Obtains the despawn time and calculates the remaining time until then."""
     try:
         if despawn is None:
@@ -75,7 +75,7 @@ def calculate_remaining_time(despawn):
             end_time_24h = datetime.datetime.fromtimestamp(despawn)
             current_time = datetime.datetime.now()
             remaining_time = end_time_24h - current_time
-            seconds = round(remaining_time.total_seconds())
+            seconds = round(remaining_time.total_seconds() - delay)
             minutes, seconds = divmod(seconds, 60)
             if minutes < 0 or seconds < 0:
                 return None
@@ -152,6 +152,11 @@ def retrieve_pokemon_move(pokemon_move_id):
     return None
 
 
+def coordinates_waiting_time(coordinates_list_size):
+    """Obtains the excecution time of fetch_pokemon_data() function"""
+    return 1.0969 * coordinates_list_size + 4.0994
+
+
 def generate_pokemon_messages():
     """Retrieves Pokemon data, formats it into messages, and returns a list of formatted messages ready to be sent."""
     try:
@@ -159,43 +164,44 @@ def generate_pokemon_messages():
         total_data = fetch_pokemon_data()
 
         if total_data != []:
-            batch_size = 2  # Define el tamaño del lote
+            message_delay = 3 if len(total_data) > 20 else 2
+            for pokemon_data in total_data:
+                delay = (
+                    1
+                    + coordinates_waiting_time(len(total_data))
+                    + message_delay * total_data.index(pokemon_data)
+                )
+                dsp = calculate_remaining_time(pokemon_data.get("despawn"), delay)
 
-            for i in range(0, len(total_data), batch_size):
-                batch_data = total_data[i : i + batch_size]
-
-                for pokemon_data in batch_data:
-                    dsp = calculate_remaining_time(pokemon_data.get("despawn"))
-
-                    if dsp:
-                        level = pokemon_data.get("level")
-                        cp = pokemon_data.get("cp")
-                        name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
-                        latitude = pokemon_data.get("lat")
-                        longitude = pokemon_data.get("lng")
-                        gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
-                        shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
-                        move1 = retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
-                        move2 = retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
-                        move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))[
-                            "icon"
-                        ]
-                        move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))[
-                            "icon"
-                        ]
-                        message = (
-                            f"*🄰* `{name}` {shiny_icon}{gender_icon}\n"
-                            f"*🄴* IV:💯 ᴄᴘ:{cp} LV:{level}\n"
-                            f"{move1_icon}{move1} \| {move2_icon}{move2}\n"
-                            f"*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
-                            f"⌚ᴅsᴘ {dsp}\n"
-                            f"`{latitude},{longitude}`"
-                        )
-                        total_message.append(message)
+                if dsp:
+                    level = pokemon_data.get("level")
+                    cp = pokemon_data.get("cp")
+                    name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
+                    latitude = pokemon_data.get("lat")
+                    longitude = pokemon_data.get("lng")
+                    gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
+                    shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
+                    move1 = retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
+                    move2 = retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
+                    move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))[
+                        "icon"
+                    ]
+                    move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))[
+                        "icon"
+                    ]
+                    message = (
+                        f"*🄰* `{name}` {shiny_icon}{gender_icon}\n"
+                        f"*🄴* IV:💯 ᴄᴘ:{cp} LV:{level}\n"
+                        f"{move1_icon}{move1} \| {move2_icon}{move2}\n"
+                        f"*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
+                        f"⌚ᴅsᴘ {dsp}\n"
+                        f"`{latitude},{longitude}`"
+                    )
+                    total_message.append(message)
         else:
             logging.error("Pokemons not found")
     except Exception as e:
         logging.error(f"Error sending Pokemon data: {e}")
         return None
-
+    print(len(total_message))
     return total_message

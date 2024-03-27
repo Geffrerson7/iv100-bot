@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from data import config
+from settings import config
 from telegram.ext import Application
 
 
