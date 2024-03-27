@@ -1,8 +1,8 @@
 import asyncio
-from bot.service import generate_pokemon_messages
+from bot.service import generate_pokemon_messages, fetch_pokemon_data, coordinates_waiting_time
 from telegram import Update
 from telegram.ext import ContextTypes
-from data import config
+from settings import config
 import telegram
 from typing import List
 
@@ -17,14 +17,18 @@ PERIOD = int(config.PERIOD)
 
 async def send_coordinates(context: ContextTypes.DEFAULT_TYPE, total_text: List[str]):
     if total_text:
+        messages_number = len(total_text)
+        message_delay = 3 if len(total_text) > 20 else 2
+        plural_letter = "" if messages_number == 1 else "s"
         await context.bot.send_message(
-            chat_id=GRUPO_COORDENADAS_ID, text="Enviando coordenadas..."
+            chat_id=GRUPO_COORDENADAS_ID,
+            text=f"Enviando {messages_number} coordenada{plural_letter}...",
         )
         for text in total_text:
             await context.bot.send_message(
                 chat_id=GRUPO_COORDENADAS_ID, text=text, parse_mode="MarkdownV2"
             )
-            await asyncio.sleep(2)
+            await asyncio.sleep(message_delay)
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
             text=f"Se terminó de enviar las coordenadas. Dentro de {PERIOD} minutos se enviarán más.",
@@ -34,6 +38,7 @@ async def send_coordinates(context: ContextTypes.DEFAULT_TYPE, total_text: List[
             chat_id=GRUPO_COORDENADAS_ID,
             text=f"No se encontraron coordenadas. Dentro de {PERIOD} minutos buscaré más.",
         )
+
 
 async def callback_coordinate(context: ContextTypes.DEFAULT_TYPE):
     try:
@@ -76,11 +81,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 "Las coordenadas ya se están enviando. Si desea detener el envío digite /stop"
             )
         else:
+            waiting_time = 1 + coordinates_waiting_time(len(fetch_pokemon_data()))
             await update.message.reply_text(
-                "En 10 segundos se enviarán las coordenadas..."
+                f"En {waiting_time:.2f} segundos se enviarán las coordenadas..."
             )
             job = context.job_queue.run_repeating(
-                callback_coordinate, interval=PERIOD * 60, first=10
+                callback_coordinate, interval=PERIOD * 60, first=1
             )
             context.chat_data["callback_coordinate"] = job
 
@@ -91,7 +97,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
 
     except Exception as e:
-        print(f"Error en start: {e}") 
+        print(f"Error en start: {e}")
         await update.message.reply_text(
             "Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
         )
@@ -99,18 +105,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-    # Verificar si el usuario está permitido para usar el comando
+        # Verificar si el usuario está permitido para usar el comando
         if update.effective_user.id not in USUARIOS_PERMITIDOS:
             await update.message.reply_text(
-            "No tienes permiso para detener el envío de coordenadas."
-        )
+                "No tienes permiso para detener el envío de coordenadas."
+            )
             return
 
-    # Verificar si el mensaje proviene del grupo de coordenadas
+        # Verificar si el mensaje proviene del grupo de coordenadas
         if update.effective_chat.id != GRUPO_COORDENADAS_ID:
             await update.message.reply_text(
-            "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
-        )
+                "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+            )
             return
 
         job = context.chat_data.get("callback_coordinate")
@@ -121,8 +127,8 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text("El envío de coordenadas ha sido detenido.")
         else:
             await update.message.reply_text(
-            "Ya dejé de enviar coordenadas. Si quieres que siga enviando usa /iv100"
-        )
+                "Ya dejé de enviar coordenadas. Si quieres que siga enviando usa /iv100"
+            )
     except telegram.error.TelegramError as e:
         print(f"Error de Telegram: {e}")
         await update.message.reply_text(
@@ -130,7 +136,7 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
 
     except Exception as e:
-        print(f"Error en stop: {e}") 
+        print(f"Error en stop: {e}")
         await update.message.reply_text(
             "Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
         )

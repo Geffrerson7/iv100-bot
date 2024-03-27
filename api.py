@@ -1,4 +1,4 @@
-from data import config
+from settings import config
 from fastapi import FastAPI
 from bot.ptb import lifespan
 import uvicorn

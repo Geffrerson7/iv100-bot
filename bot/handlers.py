@@ -3,7 +3,7 @@ from telegram.ext import (
     ContextTypes,
 )
 from telegram import ReplyKeyboardMarkup
-from data import config
+from settings import config
 import traceback
 import html
 import json

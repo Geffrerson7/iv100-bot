@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Response
 from telegram import Update
 from bot.ptb import ptb
 from http import HTTPStatus
-from data import config
+from settings import config
 
 router = APIRouter()
 
