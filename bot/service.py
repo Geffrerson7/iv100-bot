@@ -203,5 +203,4 @@ def generate_pokemon_messages():
     except Exception as e:
         logging.error(f"Error sending Pokemon data: {e}")
         return None
-    print(len(total_message))
     return total_message
