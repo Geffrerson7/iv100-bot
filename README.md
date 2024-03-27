@@ -12,6 +12,14 @@ To run this project, you'll need to add the following environment variables to y
 
 `DEBUG`
 
+`ADMIN`
+
+`SUPPORT`
+
+`CHAT_ID`
+
+`PERIOD`
+
 Clone the project
 
 ```bash
