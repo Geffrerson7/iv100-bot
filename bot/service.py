@@ -26,7 +26,7 @@ def fetch_pokemon_data():
 
     params = {
         "mons": ",".join(str(i) for i in range(999)),
-        "minIV": "100",
+        "minIV": "90",
         "time": int(time.time()),
         "since": 0,
     }
@@ -43,7 +43,7 @@ def fetch_pokemon_data():
             logging.warning(f"Failed to fetch data from {url}: {e}")
         except json.decoder.JSONDecodeError as e:
             logging.error(f"Failed to decode JSON response from {url}: {e}")
-
+    total_data.sort(key=lambda x: x["despawn"], reverse=True)
     return total_data
 
 
