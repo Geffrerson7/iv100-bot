@@ -26,7 +26,7 @@ def fetch_pokemon_data():
 
     params = {
         "mons": ",".join(str(i) for i in range(999)),
-        "minIV": "90",
+        "minIV": "100",
         "time": int(time.time()),
         "since": 0,
     }
