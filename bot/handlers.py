@@ -47,7 +47,7 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_name = update.effective_user.first_name
     message_text = f"¡Hola {user_name}, bienvenido a Adventure Elements!\n"
     message_text += "Este es un menú explicativo:\n\n"
-    message_text += "/iv100 - Inicia el envío de coordenadas.\n"
+    message_text += "/iv100 - Inicia el envío de coordenadas con IV 100.\n"
     message_text += "/iv90 - Inicia el envío de coordenadas con IV 90.\n"
     message_text += "/stop - Detiene el envío de coordenadas.\n"
 
