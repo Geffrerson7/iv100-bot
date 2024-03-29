@@ -48,9 +48,10 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_text = f"¡Hola {user_name}, bienvenido a Adventure Elements!\n"
     message_text += "Este es un menú explicativo:\n\n"
     message_text += "/iv100 - Inicia el envío de coordenadas.\n"
+    message_text += "/iv90 - Inicia el envío de coordenadas con IV 90.\n"
     message_text += "/stop - Detiene el envío de coordenadas.\n"
 
-    keyboard = [["/iv100", "/stop"]]
+    keyboard = [["/iv100", "/iv90","/stop"]]
     reply_markup = ReplyKeyboardMarkup(
         keyboard, one_time_keyboard=True, resize_keyboard=True
     )
