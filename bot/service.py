@@ -1,4 +1,4 @@
-import logging, requests, logging, time, json, datetime
+import logging, requests, logging, time, json, datetime, re
 
 
 def fetch_pokemon_data(iv):
@@ -90,44 +90,43 @@ def calculate_remaining_time(despawn, delay):
 def retrieve_move_icon(move_type):
     """Returns an emoji representing the type of a Pokémon move."""
     if move_type == "steel":
-        icon = "⚙️"
+        return "⚙️"
     elif move_type == "water":
-        icon = "💧"
+        return "💧"
     elif move_type == "bug":
-        icon = "🐞"
+        return "🐞"
     elif move_type == "dragon":
-        icon = "🐲"
+        return "🐲"
     elif move_type == "electric":
-        icon = "⚡"
+        return "⚡"
     elif move_type == "ghost":
-        icon = "👻"
+        return "👻"
     elif move_type == "fire":
-        icon = "🔥"
+        return "🔥"
     elif move_type == "ice":
-        icon = "❄️"
+        return "❄️"
     elif move_type == "fairy":
-        icon = "🌸"
+        return "🌸"
     elif move_type == "fighting":
-        icon = "🥊"
+        return "🥊"
     elif move_type == "normal":
-        icon = "🔘"
+        return "🔘"
     elif move_type == "grass":
-        icon = "🍃"
+        return "🍃"
     elif move_type == "psychic":
-        icon = "🔮"
+        return "🔮"
     elif move_type == "rock":
-        icon = "🪨"
+        return "🪨"
     elif move_type == "dark":
-        icon = "☯️"
+        return "☯️"
     elif move_type == "ground":
-        icon = "⛰️"
+        return "⛰️"
     elif move_type == "poison":
-        icon = "☠️"
+        return "☠️"
     elif move_type == "flying":
-        icon = "🪽"
+        return "🪽"
     else:
-        icon = ""
-    return icon
+        return ""
 
 
 def retrieve_pokemon_move(pokemon_move_id):
@@ -160,10 +159,24 @@ def coordinates_waiting_time(coordinates_list_size):
 def retrieve_pokemon_iv(iv_number):
     """Obtains the iv in telegram message format"""
     if iv_number == 100:
-        return "💯" 
+        return "💯"
     elif iv_number == 90:
         return "90"
-    
+
+
+def escape_string(input_string):
+    """Reemplaza los caracteres '-' por '\-', y los caracteres '.' por '\. '"""
+    return re.sub(r"[-.]", lambda x: "\\" + x.group(), input_string)
+
+
+def signature(iv):
+    if iv == 100:
+        return "*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
+    elif iv == 90:
+        return "*🌀☄️Tᴏᴘ `90` Gᴀʟᴀxʏ☄️🌀*\n"
+    else:
+        return "*🌀☄️Tᴏᴘ Gᴀʟᴀxʏ☄️🌀*\n"
+
 
 def generate_pokemon_messages(iv):
     """Retrieves Pokemon data, formats it into messages, and returns a list of formatted messages ready to be sent."""
@@ -184,13 +197,19 @@ def generate_pokemon_messages(iv):
                 if dsp:
                     level = pokemon_data.get("level")
                     cp = pokemon_data.get("cp")
-                    name = retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
+                    name = escape_string(
+                        retrieve_pokemon_name(pokemon_data["pokemon_id"]).title()
+                    )
                     latitude = pokemon_data.get("lat")
                     longitude = pokemon_data.get("lng")
                     gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
                     shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
-                    move1 = retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
-                    move2 = retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
+                    move1 = escape_string(
+                        retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
+                    )
+                    move2 = escape_string(
+                        retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
+                    )
                     move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))[
                         "icon"
                     ]
@@ -198,11 +217,12 @@ def generate_pokemon_messages(iv):
                         "icon"
                     ]
                     iv_number = retrieve_pokemon_iv(iv)
+                    message_signature = signature(iv)
                     message = (
-                        f"*🄰* `{name}` {shiny_icon}{gender_icon}\n"
+                        f"*🄰* *{name}* {shiny_icon}{gender_icon}\n"
                         f"*🄴* IV:{iv_number} ᴄᴘ:{cp} LV:{level}\n"
                         f"{move1_icon}{move1} \| {move2_icon}{move2}\n"
-                        f"*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
+                        f"{message_signature}"
                         f"⌚ᴅsᴘ {dsp}\n"
                         f"`{latitude},{longitude}`"
                     )
