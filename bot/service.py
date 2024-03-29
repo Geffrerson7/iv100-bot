@@ -41,8 +41,10 @@ def fetch_pokemon_data(iv):
                 total_data.append(pokemon)
         except requests.exceptions.RequestException as e:
             logging.warning(f"Failed to fetch data from {url}: {e}")
+            return None
         except json.decoder.JSONDecodeError as e:
             logging.error(f"Failed to decode JSON response from {url}: {e}")
+            return None 
     total_data.sort(key=lambda x: x["despawn"], reverse=True)
     return total_data
 

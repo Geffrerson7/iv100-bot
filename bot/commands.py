@@ -63,6 +63,13 @@ async def callback_coordinate_iv_90(context: ContextTypes.DEFAULT_TYPE):
         print(f"Error de RetryAfter en callback_coordinate: {e}")
         total_text_retry = generate_pokemon_messages(90)
         await send_coordinates(context, total_text_retry)
+    except Exception as e:
+        print(f"Error en callback_coordinate_iv_90: {e}")
+        message = "Lo siento, ha ocurrido un error al generar los mensajes del bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            text=message,
+        )
 
 
 async def callback_coordinate_iv_100(context: ContextTypes.DEFAULT_TYPE):
@@ -82,6 +89,13 @@ async def callback_coordinate_iv_100(context: ContextTypes.DEFAULT_TYPE):
         print(f"Error de RetryAfter en callback_coordinate: {e}")
         total_text_retry = generate_pokemon_messages(100)
         await send_coordinates(context, total_text_retry)
+    except Exception as e:
+        print(f"Error en callback_coordinate_iv_100: {e}")
+        message = "Lo siento, ha ocurrido un error al generar los mensajes del bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            text=message,
+        )
 
 
 async def start_iv_100(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -99,7 +113,7 @@ async def start_iv_100(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
             )
             return
-        
+
         job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
         job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
@@ -151,7 +165,7 @@ async def start_iv_90(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
             )
             return
-        
+
         job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
         job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
