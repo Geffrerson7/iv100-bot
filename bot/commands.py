@@ -101,16 +101,14 @@ async def start_iv_100(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             return
         
         job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
+        job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
         if job_iv_90:
             await update.message.reply_text(
                 "Las coordenadas de IV 90 se están enviando. Si desea enviar IV 100, digite /stop y luego /iv100"
             )
             return
-        
-        job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
-
-        if job_iv_100:
+        elif job_iv_100:
             await update.message.reply_text(
                 "Las coordenadas de IV 100 ya se están enviando. Si desea detener el envío digite /stop"
             )
@@ -154,6 +152,7 @@ async def start_iv_90(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
             )
             return
         
+        job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
         job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
         if job_iv_100:
@@ -161,10 +160,7 @@ async def start_iv_90(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 "Las coordenadas de IV 100 se están enviando. Si desea enviar IV 90, digite /stop y luego /iv90"
             )
             return
-        
-        job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
-
-        if job_iv_90:
+        elif job_iv_90:
             await update.message.reply_text(
                 "Las coordenadas de IV 90 ya se están enviando. Si desea detener el envío digite /stop"
             )
