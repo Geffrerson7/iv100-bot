@@ -1,7 +1,7 @@
 import logging, requests, logging, time, json, datetime
 
 
-def fetch_pokemon_data():
+def fetch_pokemon_data(iv):
     """Obtains Pokémon data from multiple sources and returns a combined list of Pokémon with a 100% IV."""
     total_data = []
     urls = [
@@ -26,7 +26,7 @@ def fetch_pokemon_data():
 
     params = {
         "mons": ",".join(str(i) for i in range(999)),
-        "minIV": "100",
+        "minIV": str(iv),
         "time": int(time.time()),
         "since": 0,
     }
@@ -157,11 +157,19 @@ def coordinates_waiting_time(coordinates_list_size):
     return 1.0969 * coordinates_list_size + 4.0994
 
 
-def generate_pokemon_messages():
+def retrieve_pokemon_iv(iv_number):
+    """Obtains the iv in telegram message format"""
+    if iv_number == 100:
+        return "💯" 
+    elif iv_number == 90:
+        return "90"
+    
+
+def generate_pokemon_messages(iv):
     """Retrieves Pokemon data, formats it into messages, and returns a list of formatted messages ready to be sent."""
     try:
         total_message = []
-        total_data = fetch_pokemon_data()
+        total_data = fetch_pokemon_data(iv)
 
         if total_data != []:
             message_delay = 3 if len(total_data) > 20 else 2
@@ -189,9 +197,10 @@ def generate_pokemon_messages():
                     move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))[
                         "icon"
                     ]
+                    iv_number = retrieve_pokemon_iv(iv)
                     message = (
                         f"*🄰* `{name}` {shiny_icon}{gender_icon}\n"
-                        f"*🄴* IV:💯 ᴄᴘ:{cp} LV:{level}\n"
+                        f"*🄴* IV:{iv_number} ᴄᴘ:{cp} LV:{level}\n"
                         f"{move1_icon}{move1} \| {move2_icon}{move2}\n"
                         f"*🌀☄️Tᴏᴘ💯Gᴀʟᴀxʏ☄️🌀*\n"
                         f"⌚ᴅsᴘ {dsp}\n"
