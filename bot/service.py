@@ -167,7 +167,7 @@ def retrieve_pokemon_iv(iv_number):
 
 
 def escape_string(input_string):
-    """Reemplaza los caracteres '-' por '\-', y los caracteres '.' por '\. '"""
+    """Replaces characters '-' with '\-', and characters '.' with '\.' """
     return re.sub(r"[-.]", lambda x: "\\" + x.group(), input_string)
 
 

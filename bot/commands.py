@@ -60,7 +60,7 @@ async def callback_coordinate_iv_90(context: ContextTypes.DEFAULT_TYPE):
             chat_id=GRUPO_COORDENADAS_ID,
             text=message,
         )
-        print(f"Error de RetryAfter en callback_coordinate: {e}")
+        print(f"Error de RetryAfter en callback_coordinate_iv_90: {e}")
         total_text_retry = generate_pokemon_messages(90)
         await send_coordinates(context, total_text_retry)
     except Exception as e:
@@ -86,7 +86,7 @@ async def callback_coordinate_iv_100(context: ContextTypes.DEFAULT_TYPE):
             chat_id=GRUPO_COORDENADAS_ID,
             text=message,
         )
-        print(f"Error de RetryAfter en callback_coordinate: {e}")
+        print(f"Error de RetryAfter en callback_coordinate_iv_100: {e}")
         total_text_retry = generate_pokemon_messages(100)
         await send_coordinates(context, total_text_retry)
     except Exception as e:

@@ -61,10 +61,16 @@ Once all of that is done, proceed to start the app
 
 ## Telegram bot's menu
 
-Start sending coordinates:
+Start sending coordinates with pokemon IV 100:
 
 ```bash
   /iv100
+```
+
+Start sending coordinates with pokemon IV 90:
+
+```bash
+  /iv90
 ```
 
 Stop sending coordinates:
