@@ -187,7 +187,7 @@ def generate_pokemon_messages(iv):
         total_data = fetch_pokemon_data(iv)
 
         if total_data != []:
-            message_delay = 3 if len(total_data) > 20 else 2
+            message_delay = 3 if len(total_data) > 18 else 2
             for pokemon_data in total_data:
                 delay = (
                     1
