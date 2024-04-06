@@ -62,7 +62,7 @@ async def callback_coordinate_iv_90(context: ContextTypes.DEFAULT_TYPE):
         )
         print(f"Error de RetryAfter en callback_coordinate_iv_90: {e}")
         total_text_retry = generate_pokemon_messages(90)
-        await send_coordinates(context, total_text_retry)
+        await send_coordinates(context, total_text_retry, 90)
     except Exception as e:
         print(f"Error en callback_coordinate_iv_90: {e}")
         message = "Lo siento, ha ocurrido un error al generar los mensajes del bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
@@ -88,7 +88,7 @@ async def callback_coordinate_iv_100(context: ContextTypes.DEFAULT_TYPE):
         )
         print(f"Error de RetryAfter en callback_coordinate_iv_100: {e}")
         total_text_retry = generate_pokemon_messages(100)
-        await send_coordinates(context, total_text_retry)
+        await send_coordinates(context, total_text_retry, 100)
     except Exception as e:
         print(f"Error en callback_coordinate_iv_100: {e}")
         message = "Lo siento, ha ocurrido un error al generar los mensajes del bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
