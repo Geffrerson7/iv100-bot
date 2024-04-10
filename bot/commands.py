@@ -24,7 +24,7 @@ async def send_coordinates(
 ):
     if total_text:
         messages_number = len(total_text)
-        message_delay = 3 if len(total_text) > 20 else 2
+        message_delay = 3 if len(total_text) > 18 else 2
         plural_letter = "" if messages_number == 1 else "s"
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
