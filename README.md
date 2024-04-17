@@ -76,3 +76,8 @@ Start sending coordinates with pokemon IV 90:
 Stop sending coordinates:
 ```bash
   /stop
+```
+
+## Demo
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/JmVROMN3D1s)](https://youtu.be/JmVROMN3D1s "IV 100 Telegram Bot Demo Video")
