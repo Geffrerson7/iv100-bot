@@ -1,4 +1,4 @@
-import logging, requests, logging, time, json, datetime, re
+import logging, requests, logging, time, json, datetime, re, traceback
 
 
 def fetch_pokemon_data(iv):
@@ -437,6 +437,8 @@ def retrieve_pokemon_move(pokemon_move_id):
             move_type = data["type"]["name"]
             icon = retrieve_move_icon(move_type)
             return {"name": name, "icon": icon}
+        else:
+            return {"name": "", "icon": ""}
     except requests.exceptions.RequestException as e:
         logging.warning(
             f"Error fetching Pokemon move name for ID {pokemon_move_id}: {e}"
@@ -525,5 +527,6 @@ def generate_pokemon_messages(iv):
             logging.error("Pokemons not found")
     except Exception as e:
         logging.error(f"Error sending Pokemon data: {e}")
+        logging.error(traceback.format_exc())
         return None
     return total_message
