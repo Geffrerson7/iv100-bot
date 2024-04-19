@@ -17,7 +17,7 @@ def add_handlers(dp):
     dp.add_handler(CommandHandler("iv100", start_iv_100))
     dp.add_handler(CommandHandler("iv90", start_iv_90))
     dp.add_handler(CommandHandler("stop", stop))
-    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
+    dp.add_handler(MessageHandler(filters.COMMAND, text_handler))
 
 
 add_handlers(ptb)
