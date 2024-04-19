@@ -443,9 +443,10 @@ def retrieve_pokemon_move(pokemon_move_id):
         logging.warning(
             f"Error fetching Pokemon move name for ID {pokemon_move_id}: {e}"
         )
+        return {"name": "", "icon": ""}
     except ValueError as e:
         logging.error(f"Error decoding JSON response from PokeAPI: {e}")
-
+        return {"name": "", "icon": ""}
 
 def coordinates_waiting_time(coordinates_list_size):
     """Obtains the excecution time of fetch_pokemon_data() function"""
