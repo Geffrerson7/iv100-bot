@@ -444,8 +444,6 @@ def retrieve_pokemon_move(pokemon_move_id):
     except ValueError as e:
         logging.error(f"Error decoding JSON response from PokeAPI: {e}")
 
-    return None
-
 
 def coordinates_waiting_time(coordinates_list_size):
     """Obtains the excecution time of fetch_pokemon_data() function"""
