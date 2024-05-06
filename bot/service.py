@@ -89,363 +89,59 @@ def calculate_remaining_time(despawn, delay):
 
 def retrieve_move_icon(move_type):
     """Returns an emoji representing the type of a Pokémon move."""
-    if move_type == "steel":
+    if move_type == "Acero":
         return "⚙️"
-    elif move_type == "water":
+    elif move_type == "Agua":
         return "💧"
-    elif move_type == "bug":
+    elif move_type == "Bicho":
         return "🐞"
-    elif move_type == "dragon":
+    elif move_type == "Dragón":
         return "🐲"
-    elif move_type == "electric":
+    elif move_type == "Eléctrico":
         return "⚡"
-    elif move_type == "ghost":
+    elif move_type == "Fantasma":
         return "👻"
-    elif move_type == "fire":
+    elif move_type == "Fuego":
         return "🔥"
-    elif move_type == "ice":
+    elif move_type == "Hielo":
         return "❄️"
-    elif move_type == "fairy":
+    elif move_type == "Hada":
         return "🌸"
-    elif move_type == "fighting":
+    elif move_type == "Lucha":
         return "🥊"
-    elif move_type == "normal":
+    elif move_type == "Normal":
         return "🔘"
-    elif move_type == "grass":
-        return "🍃"
-    elif move_type == "psychic":
+    elif move_type == "Planta":
+        return "🌿"
+    elif move_type == "Psíquico":
         return "🔮"
-    elif move_type == "rock":
+    elif move_type == "Roca":
         return "🪨"
-    elif move_type == "dark":
+    elif move_type == "Siniestro":
         return "☯️"
-    elif move_type == "ground":
+    elif move_type == "Tierra":
         return "⛰️"
-    elif move_type == "poison":
+    elif move_type == "Veneno":
         return "☠️"
-    elif move_type == "flying":
+    elif move_type == "Volador":
         return "🪽"
     else:
         return ""
 
 
-def retrieve_pokemon_move(pokemon_move_id):
+def retrieve_pokemon_move(pokemon_move_id, pokemon_name):
     """Gets the move name of a Pokemon based on the move ID using the PokeAPI."""
-    moves_dict = {
-        1: "Thunder Shock",
-        2: "Quick Attack",
-        3: "Scratch",
-        4: "Ember",
-        5: "Vine Whip",
-        6: "Tackle",
-        7: "Razor Leaf",
-        8: "Take Down",
-        9: "Water Gun",
-        10: "Bite",
-        11: "Pound",
-        12: "Double Slap",
-        13: "Wrap",
-        14: "Hyper Beam",
-        15: "Lick",
-        16: "Dark Pulse",
-        17: "Smog",
-        18: "Sludge",
-        19: "Metal Claw",
-        20: "Vice Grip",
-        21: "Flame Wheel",
-        22: "Megahorn",
-        23: "Wing Attack",
-        24: "Flamethrower",
-        25: "Sucker Punch",
-        26: "Dig",
-        27: "Low Kick",
-        28: "Cross Chop",
-        29: "Psycho Cut",
-        30: "Psybeam",
-        31: "Earthquake",
-        32: "Stone Edge",
-        33: "Ice Punch",
-        34: "Heart Stamp",
-        35: "Discharge",
-        36: "Flash Cannon",
-        37: "Peck",
-        38: "Drill Peck",
-        39: "Ice Beam",
-        40: "Blizzard",
-        41: "Air Slash",
-        42: "Heat Wave",
-        43: "Twineedle",
-        44: "Poison Jab",
-        45: "Aerial Ace",
-        46: "Drill Run",
-        47: "Petal Blizzard",
-        48: "Mega Drain",
-        49: "Bug Buzz",
-        50: "Poison Fang",
-        51: "Night Slash",
-        52: "Slash",
-        53: "Bubble Beam",
-        54: "Submission",
-        55: "Karate Chop",
-        56: "Low Sweep",
-        57: "Aqua Jet",
-        58: "Aqua Tail",
-        59: "Seed Bomb",
-        60: "Psyshock",
-        61: "Rock Throw",
-        62: "Ancient Power",
-        63: "Rock Tomb",
-        64: "Rock Slide",
-        65: "Power Gem",
-        66: "Shadow Sneak",
-        67: "Shadow Punch",
-        68: "Shadow Claw",
-        69: "Ominous Wind",
-        70: "Shadow Ball",
-        71: "Bullet Punch",
-        72: "Magnet Bomb",
-        73: "Steel Wing",
-        74: "Iron Head",
-        75: "Parabolic Charge",
-        76: "Spark",
-        77: "Thunder Punch",
-        78: "Thunder",
-        79: "Thunderbolt",
-        80: "Twister",
-        81: "Dragon Breath",
-        82: "Dragon Pulse",
-        83: "Dragon Claw",
-        84: "Disarming Voice",
-        85: "Draining Kiss",
-        86: "Dazzling Gleam",
-        87: "Moonblast",
-        88: "Play Rough",
-        89: "Cross Poison",
-        90: "Sludge Bomb",
-        91: "Sludge Wave",
-        92: "Gunk Shot",
-        93: "Mud Shot",
-        94: "Bone Club",
-        95: "Bulldoze",
-        96: "Mud Bomb",
-        97: "Fury Cutter",
-        98: "Bug Bite",
-        99: "Signal Beam",
-        100: "X Scissor",
-        101: "Flame Charge",
-        102: "Flame Burst",
-        103: "Fire Blast",
-        104: "Brine",
-        105: "Water Pulse",
-        106: "Scald",
-        107: "Hydro Pump",
-        108: "Psychic",
-        109: "Psystrike",
-        110: "Ice Shard",
-        111: "Icy Wind",
-        112: "Frost Breath",
-        113: "Absorb",
-        114: "Giga Drain",
-        115: "Fire Punch",
-        116: "Solar Beam",
-        117: "Leaf Blade",
-        118: "Power Whip",
-        119: "Splash",
-        120: "Acid",
-        121: "Air Cutter",
-        122: "Hurricane",
-        123: "Brick Break",
-        124: "Cut",
-        125: "Swift",
-        126: "Horn Attack",
-        127: "Stomp",
-        128: "Headbutt",
-        129: "Hyper Fang",
-        130: "Slam",
-        131: "Body Slam",
-        132: "Rest",
-        133: "Struggle",
-        134: "Scald",
-        135: "Hydro Pump",
-        136: "Wrap Green",
-        137: "Wrap Pink",
-        200: "Fury Cutter",
-        201: "Bug Bite",
-        202: "Bite",
-        203: "Sucker Punch",
-        204: "Dragon Breath",
-        205: "Thunder Shock",
-        206: "Spark",
-        207: "Low Kick",
-        208: "Karate Chop",
-        209: "Ember",
-        210: "Wing Attack",
-        211: "Peck",
-        212: "Lick",
-        213: "Shadow Claw",
-        214: "Vine Whip",
-        215: "Razor Leaf",
-        216: "Mud Shot",
-        217: "Ice Shard",
-        218: "Frost Breath",
-        219: "Quick Attack",
-        220: "Scratch",
-        221: "Tackle",
-        222: "Pound",
-        223: "Cut",
-        224: "Poison Jab",
-        225: "Acid",
-        226: "Psycho Cut",
-        227: "Rock Throw",
-        228: "Metal Claw",
-        229: "Bullet Punch",
-        230: "Water Gun",
-        231: "Splash",
-        232: "Water Gun",
-        233: "Mud Slap",
-        234: "Zen Headbutt",
-        235: "Confusion",
-        236: "Poison Sting",
-        237: "Bubble",
-        238: "Feint Attack",
-        239: "Steel Wing",
-        240: "Fire Fang",
-        241: "Rock Smash",
-        242: "Transform",
-        243: "Counter",
-        244: "Powder Snow",
-        245: "Close Combat",
-        246: "Dynamic Punch",
-        247: "Focus Blast",
-        248: "Aurora Beam",
-        249: "Charge Beam",
-        250: "Volt Switch",
-        251: "Wild Charge",
-        252: "Zap Cannon",
-        253: "Dragon Tail",
-        254: "Avalanche",
-        255: "Air Slash",
-        256: "Brave Bird",
-        257: "Sky Attack",
-        258: "Sand Tomb",
-        259: "Rock Blast",
-        260: "Infestation",
-        261: "Struggle Bug",
-        262: "Silver Wind",
-        263: "Astonish",
-        264: "Hex",
-        265: "Night Shade",
-        266: "Iron Tail",
-        267: "Gyro Ball",
-        268: "Heavy Slam",
-        269: "Fire Spin",
-        270: "Overheat",
-        271: "Bullet Seed",
-        272: "Grass Knot",
-        273: "Energy Ball",
-        274: "Extrasensory",
-        275: "Futuresight",
-        276: "Mirror Coat",
-        277: "Outrage",
-        278: "Snarl",
-        279: "Crunch",
-        280: "Foul Play",
-        281: "Hidden Power",
-        282: "Take Down",
-        283: "Waterfall",
-        284: "Surf",
-        285: "Draco Meteor",
-        286: "Doom Desire",
-        287: "Yawn",
-        288: "Psycho Boost",
-        289: "Origin Pulse",
-        290: "Precipice Blades",
-        291: "Present",
-        292: "Weather Ball Fire",
-        293: "Weather Ball Ice",
-        294: "Weather Ball Rock",
-        295: "Weather Ball Water",
-        296: "Frenzy Plant",
-        297: "Smack Down",
-        298: "Blast Burn",
-        299: "Hydro Cannon",
-        300: "Last Resort",
-        301: "Meteor Mash",
-        302: "Skull Bash",
-        303: "Acid Spray",
-        304: "Earth Power",
-        305: "Crabhammer",
-        306: "Lunge",
-        307: "Crush Claw",
-        308: "Octazooka",
-        309: "Mirror Shot",
-        310: "Super Power",
-        311: "Fell Stinger",
-        312: "Leaf Tornado",
-        313: "Leech Life",
-        314: "Drain Punch",
-        315: "Shadow Bone",
-        316: "Muddy Water",
-        317: "Blaze Kick",
-        318: "Razor Shell",
-        319: "Power Up Punch",
-        320: "Charm",
-        321: "Giga Impact",
-        322: "Frustration",
-        323: "Return",
-        324: "Synchronoise",
-        325: "Lock On",
-        326: "Thunder Fang",
-        327: "Ice Fang",
-        328: "Horn Drill",
-        329: "Fissure",
-        330: "Sacred Sword",
-        331: "Flying Press",
-        332: "Aura Sphere",
-        333: "Payback",
-        334: "Rock Wrecker",
-        335: "Aeroblast",
-        336: "Techno Blast Normal",
-        337: "Techno Blast Burn",
-        338: "Techno Blast Chill",
-        339: "Techno Blast Water",
-        340: "Techno Blast Shock",
-        341: "Fly",
-        342: "V Create",
-        343: "Leaf Storm",
-        344: "Tri Attack",
-        345: "Gust",
-        346: "Incinerate",
-        347: "Dark Void",
-        348: "Feather Dance",
-        349: "Fiery Dance",
-        350: "Fairy Wind",
-        351: "Relic Song",
-        352: "Weather Ball",
-    }
-
-    try:
-        move_name = moves_dict.get(pokemon_move_id)
-        if move_name:
-            move_name = move_name.lower().replace(" ", "-")
-            pokeapi_url = f"https://pokeapi.co/api/v2/move/{move_name}"
-            response = requests.get(pokeapi_url)
-            response.raise_for_status()
-
-            data = response.json()
-            name = data["names"][5]["name"]
-            move_type = data["type"]["name"]
-            icon = retrieve_move_icon(move_type)
-            return {"name": name, "icon": icon}
-        else:
-            return {"name": "", "icon": ""}
-    except requests.exceptions.RequestException as e:
-        logging.warning(
-            f"Error fetching Pokemon move name for ID {pokemon_move_id}: {e}"
-        )
-        return {"name": "", "icon": ""}
-    except ValueError as e:
-        logging.error(f"Error decoding JSON response from PokeAPI: {e}")
+        
+    with open("data/moves.json", "r") as file:
+        moves_data = json.load(file)
+    move = moves_data.get(str(pokemon_move_id))
+    if move:
+        move_name = move.get("name")
+        move_type = move.get("type")
+        icon = retrieve_move_icon(move_type)
+        return {"name": move_name, "icon": icon}
+    else:
+        print(f"Pokemon:{pokemon_name}, move_id:{pokemon_move_id}")
         return {"name": "", "icon": ""}
 
 def coordinates_waiting_time(coordinates_list_size):
@@ -502,15 +198,15 @@ def generate_pokemon_messages(iv):
                     gender_icon = "♂️" if pokemon_data.get("gender") == 1 else "♀️"
                     shiny_icon = "✨" if pokemon_data.get("shiny") == 0 else ""
                     move1 = escape_string(
-                        retrieve_pokemon_move(pokemon_data.get("move1"))["name"]
+                        retrieve_pokemon_move(pokemon_data.get("move1"), name)["name"]
                     )
                     move2 = escape_string(
-                        retrieve_pokemon_move(pokemon_data.get("move2"))["name"]
+                        retrieve_pokemon_move(pokemon_data.get("move2"), name)["name"]
                     )
-                    move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"))[
+                    move1_icon = retrieve_pokemon_move(pokemon_data.get("move1"), name)[
                         "icon"
                     ]
-                    move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"))[
+                    move2_icon = retrieve_pokemon_move(pokemon_data.get("move2"), name)[
                         "icon"
                     ]
                     iv_number = retrieve_pokemon_iv(iv)
@@ -531,3 +227,4 @@ def generate_pokemon_messages(iv):
         logging.error(traceback.format_exc())
         return None
     return total_message
+
