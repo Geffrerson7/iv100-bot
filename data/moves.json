@@ -289,6 +289,7 @@
   "350": { "name": "Viento Fe\u00e9rico", "type": "Hada" },
   "351": { "name": "Canto Arcaico", "type": "Normal" },
   "352": { "name": "Meteorobola", "type": "Normal" },
+  "353": { "name": "Psicocolmillo", "type": "Ps\u00edquico" },
   "356": { "name": "Doble Patada", "type": "Lucha" },
   "372": { "name": "Rayo Mete\u00f3rico", "type": "Roca" },
   "382": { "name": "Llama Embrujada", "type": "Fuego" },
@@ -297,5 +298,6 @@
   "392": { "name": "Abrecaminos", "type": "Planta" },
   "393": { "name": "Arenas Ardientes", "type": "Tierra" },
   "401": { "name": "Psicoonda", "type": "Ps\u00edquico" },
+  "402": { "name": "Eco Met\u00e1lico", "type": "Acero" },
   "403": { "name": "Ataque Arena", "type": "Tierra" }
 }
