@@ -144,6 +144,7 @@ def retrieve_pokemon_move(pokemon_move_id, pokemon_name):
         print(f"Pokemon:{pokemon_name}, move_id:{pokemon_move_id}")
         return {"name": "", "icon": ""}
 
+
 def coordinates_waiting_time(coordinates_list_size):
     """Obtains the excecution time of fetch_pokemon_data() function"""
     return 1.0969 * coordinates_list_size + 4.0994
