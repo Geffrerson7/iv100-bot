@@ -1,4 +1,4 @@
-import logging, requests, logging, time, json, datetime, re, traceback
+import logging, requests, time, json, datetime, re, traceback
 
 
 def fetch_pokemon_data(iv):
@@ -131,7 +131,7 @@ def retrieve_move_icon(move_type):
 
 def retrieve_pokemon_move(pokemon_move_id, pokemon_name):
     """Gets the move name of a Pokemon based on the move ID using the PokeAPI."""
-        
+
     with open("data/moves.json", "r") as file:
         moves_data = json.load(file)
     move = moves_data.get(str(pokemon_move_id))
@@ -228,4 +228,3 @@ def generate_pokemon_messages(iv):
         logging.error(traceback.format_exc())
         return None
     return total_message
-

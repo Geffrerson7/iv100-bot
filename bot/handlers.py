@@ -35,9 +35,10 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("No tienes permiso para utilizar este comando.")
         return
 
-    job = context.chat_data.get("callback_coordinate")
+    job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
+    job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
-    if job:
+    if job_iv_100 or job_iv_90:
         await update.message.reply_text(
             "Lo siento, ya hay una instancia activa del bot. Por favor, espera a que se detenga antes de iniciar otra."
         )
