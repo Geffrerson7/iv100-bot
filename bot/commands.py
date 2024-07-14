@@ -6,17 +6,18 @@ from bot.service import (
 )
 from telegram import Update
 from telegram.ext import ContextTypes
-from settings import config
+from settings.config import CHAT_ID, SUPPORT, ADMIN, PERIOD, MESSAGE_THREAD_ID
 import telegram
 from typing import List
 
 # ID del grupo al que se enviarán las coordenadas
-GRUPO_COORDENADAS_ID = int(config.CHAT_ID)
-
+GRUPO_COORDENADAS_ID = int(CHAT_ID)
 # Lista de usuarios permitidos para activar los comandos
-USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)]
-
-PERIOD = int(config.PERIOD)
+USUARIOS_PERMITIDOS = [int(SUPPORT), int(ADMIN)]
+# Periodo de tiempo en minutos en el que el bot busca coordenadas
+PERIOD = int(PERIOD)
+# ID del tema del grupo al que se enviarán las coordenadas
+TEMA_ID = int(MESSAGE_THREAD_ID)
 
 
 async def send_coordinates(
@@ -28,20 +29,26 @@ async def send_coordinates(
         plural_letter = "" if messages_number == 1 else "s"
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=f"Enviando {messages_number} coordenada{plural_letter} IV {str(iv)}...",
         )
         for text in total_text:
             await context.bot.send_message(
-                chat_id=GRUPO_COORDENADAS_ID, text=text, parse_mode="MarkdownV2"
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text=text,
+                parse_mode="MarkdownV2",
             )
             await asyncio.sleep(message_delay)
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=f"Se terminó de enviar la{plural_letter} coordenada{plural_letter} IV {str(iv)}. Dentro de {PERIOD} minutos se enviarán más.",
         )
     else:
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=f"No se encontraron coordenadas. Dentro de {PERIOD} minutos buscaré más.",
         )
 
@@ -58,6 +65,7 @@ async def callback_coordinate_iv_90(context: ContextTypes.DEFAULT_TYPE):
         )
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=message,
         )
         print(f"Error de RetryAfter en callback_coordinate_iv_90: {e}")
@@ -68,6 +76,7 @@ async def callback_coordinate_iv_90(context: ContextTypes.DEFAULT_TYPE):
         message = "Lo siento, ha ocurrido un error al generar los mensajes del bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=message,
         )
 
@@ -84,6 +93,7 @@ async def callback_coordinate_iv_100(context: ContextTypes.DEFAULT_TYPE):
         )
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=message,
         )
         print(f"Error de RetryAfter en callback_coordinate_iv_100: {e}")
@@ -94,6 +104,7 @@ async def callback_coordinate_iv_100(context: ContextTypes.DEFAULT_TYPE):
         message = "Lo siento, ha ocurrido un error al generar los mensajes del bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
         await context.bot.send_message(
             chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
             text=message,
         )
 
@@ -102,15 +113,18 @@ async def start_iv_100(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     try:
         # Verificar si el usuario está permitido para activar los comandos
         if update.effective_user.id not in USUARIOS_PERMITIDOS:
-            await update.message.reply_text(
-                "No tienes permiso para activar los comandos."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="No tienes permiso para activar los comandos.",
             )
             return
-
         # Verificar si el mensaje proviene del grupo de coordenadas
         if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-            await update.message.reply_text(
-                "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Los comandos solo pueden ser activados en el grupo de @top100galaxy1",
             )
             return
 
@@ -123,14 +137,16 @@ async def start_iv_100(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             )
             return
         elif job_iv_100:
-            await update.message.reply_text(
-                "Las coordenadas de IV 100 ya se están enviando. Si desea detener el envío digite /stop"
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Las coordenadas de IV 100 ya se están enviando. Si desea detener el envío digite /stop",
             )
         else:
-            coordinates_lista_size = len(fetch_pokemon_data(100))
-            waiting_time = 1 + coordinates_waiting_time(coordinates_lista_size)
-            await update.message.reply_text(
-                f"En {waiting_time:.2f} segundos se enviarán las coordenadas..."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Buscando coordenadas...",
             )
             job_iv_100 = context.job_queue.run_repeating(
                 callback_coordinate_iv_100, interval=PERIOD * 60, first=1
@@ -139,14 +155,18 @@ async def start_iv_100(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     except telegram.error.TelegramError as e:
         print(f"Error de Telegram: {e}")
-        await update.message.reply_text(
-            "Se ha producido un error al ejecutar el comando /iv100. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
-        )
+        await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Se ha producido un error al ejecutar el comando /iv100. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible.",
+            )
 
     except Exception as e:
-        print(f"Error en start: {e}")
-        await update.message.reply_text(
-            "Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
+        print(f"Error en start_iv_100(): {e}")
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
+            text="Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible.",
         )
 
 
@@ -154,15 +174,18 @@ async def start_iv_90(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     try:
         # Verificar si el usuario está permitido para activar los comandos
         if update.effective_user.id not in USUARIOS_PERMITIDOS:
-            await update.message.reply_text(
-                "No tienes permiso para activar los comandos."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="No tienes permiso para activar los comandos.",
             )
             return
-
         # Verificar si el mensaje proviene del grupo de coordenadas
         if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-            await update.message.reply_text(
-                "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Los comandos solo pueden ser activados en el grupo de @top100galaxy1",
             )
             return
 
@@ -170,19 +193,23 @@ async def start_iv_90(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
         if job_iv_100:
-            await update.message.reply_text(
-                "Las coordenadas de IV 100 se están enviando. Si desea enviar IV 90, digite /stop y luego /iv90"
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Las coordenadas de IV 100 se están enviando. Si desea enviar IV 90, digite /stop y luego /iv90",
             )
             return
         elif job_iv_90:
-            await update.message.reply_text(
-                "Las coordenadas de IV 90 ya se están enviando. Si desea detener el envío digite /stop"
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Las coordenadas de IV 90 ya se están enviando. Si desea enviar IV 100, digite /stop y luego /iv100",
             )
         else:
-            coordinates_lista_size = len(fetch_pokemon_data(90))
-            waiting_time = 1 + coordinates_waiting_time(coordinates_lista_size)
-            await update.message.reply_text(
-                f"En {waiting_time:.2f} segundos se enviarán las coordenadas..."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Buscando coordenadas...",
             )
             job_iv_90 = context.job_queue.run_repeating(
                 callback_coordinate_iv_90, interval=PERIOD * 60, first=1
@@ -191,30 +218,37 @@ async def start_iv_90(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     except telegram.error.TelegramError as e:
         print(f"Error de Telegram: {e}")
-        await update.message.reply_text(
-            "Se ha producido un error al ejecutar el comando /iv90. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
-        )
+        await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Se ha producido un error al ejecutar el comando /iv90. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible.",
+            )
 
     except Exception as e:
-        print(f"Error en start: {e}")
-        await update.message.reply_text(
-            "Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
+        print(f"Error en start_iv_90(): {e}")
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
+            text="Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible.",
         )
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-        # Verificar si el usuario está permitido para usar el comando
+        # Verificar si el usuario está permitido para activar los comandos
         if update.effective_user.id not in USUARIOS_PERMITIDOS:
-            await update.message.reply_text(
-                "No tienes permiso para detener el envío de coordenadas."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="No tienes permiso para activar los comandos.",
             )
             return
-
         # Verificar si el mensaje proviene del grupo de coordenadas
         if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-            await update.message.reply_text(
-                "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Los comandos solo pueden ser activados en el grupo de @top100galaxy1",
             )
             return
 
@@ -224,28 +258,38 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if job_iv_100:
             job_iv_100.schedule_removal()
             del context.chat_data["callback_coordinate_iv_100"]
-            await update.message.reply_text(
-                "El envío de coordenadas IV 100 ha sido detenido."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="El envío de coordenadas IV 100 ha sido detenido.",
             )
         elif job_iv_90:
             job_iv_90.schedule_removal()
             del context.chat_data["callback_coordinate_iv_90"]
-            await update.message.reply_text(
-                "El envío de coordenadas IV 90 ha sido detenido."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="El envío de coordenadas IV 90 ha sido detenido.",
             )
         else:
-            await update.message.reply_text(
-                "No se encontró ningún envío de coordenadas activo."
+            await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="No se encontró ningún envío de coordenadas activo.",
             )
 
     except telegram.error.TelegramError as e:
         print(f"Error de Telegram: {e}")
-        await update.message.reply_text(
-            "Se ha producido un error al ejecutar el comando /stop. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
-        )
+        await context.bot.send_message(
+                chat_id=GRUPO_COORDENADAS_ID,
+                message_thread_id=TEMA_ID,
+                text="Se ha producido un error al ejecutar el comando /stop. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible.",
+            )
 
     except Exception as e:
-        print(f"Error en stop: {e}")
-        await update.message.reply_text(
-            "Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible."
+        print(f"Error en stop(): {e}")
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
+            text="Lo siento, ha ocurrido un error con el bot. Por favor, comunica este error al administrador del bot para que pueda solucionarlo lo antes posible.",
         )
