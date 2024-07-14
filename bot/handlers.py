@@ -2,21 +2,28 @@ from telegram import Update
 from telegram.ext import (
     ContextTypes,
 )
-from telegram import ReplyKeyboardMarkup
-from settings import config
+from settings.config import (
+    CHAT_ID,
+    SUPPORT,
+    ADMIN,
+    PERIOD,
+    MESSAGE_THREAD_ID,
+    DEVELOPER_CHAT_ID,
+)
 import traceback
 import html
 import json
 from telegram.constants import ParseMode
 from common.log import logger
 
-
-DEVELOPER_CHAT_ID = config.DEVELOPER_CHAT_ID
 # ID del grupo al que se enviarán las coordenadas
-GRUPO_COORDENADAS_ID = int(config.CHAT_ID)
-
+GRUPO_COORDENADAS_ID = int(CHAT_ID)
 # Lista de usuarios permitidos para activar los comandos
-USUARIOS_PERMITIDOS = [int(config.SUPPORT), int(config.ADMIN)]
+USUARIOS_PERMITIDOS = [int(SUPPORT), int(ADMIN)]
+# Periodo de tiempo en minutos en el que el bot busca coordenadas
+PERIOD = int(PERIOD)
+# ID del tema del grupo al que se enviarán las coordenadas
+TEMA_ID = int(MESSAGE_THREAD_ID)
 
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -25,22 +32,30 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     # Verificar si el mensaje proviene del grupo permitido
     if update.effective_chat.id != GRUPO_COORDENADAS_ID:
-        await update.message.reply_text(
-            "Los comandos solo pueden ser activados en el grupo de @top100galaxy1"
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
+            text="Los comandos solo pueden ser activados en el grupo de @top100galaxy1",
         )
         return
 
     # Verificar si el usuario está permitido para usar el comando
     if update.effective_user.id not in USUARIOS_PERMITIDOS:
-        await update.message.reply_text("No tienes permiso para utilizar este comando.")
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
+            text="No tienes permiso para utilizar este comando.",
+        )
         return
 
     job_iv_90 = context.chat_data.get("callback_coordinate_iv_90")
     job_iv_100 = context.chat_data.get("callback_coordinate_iv_100")
 
     if job_iv_100 or job_iv_90:
-        await update.message.reply_text(
-            "Lo siento, ya hay una instancia activa del bot. Por favor, espera a que se detenga antes de iniciar otra."
+        await context.bot.send_message(
+            chat_id=GRUPO_COORDENADAS_ID,
+            message_thread_id=TEMA_ID,
+            text="Lo siento, ya hay una instancia activa del bot. Por favor, espera a que se detenga antes de iniciar otra.",
         )
         return
 
@@ -51,13 +66,11 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_text += "/iv100 - Inicia el envío de coordenadas con IV 100.\n"
     message_text += "/iv90 - Inicia el envío de coordenadas con IV 90.\n"
     message_text += "/stop - Detiene el envío de coordenadas.\n"
-
-    keyboard = [["/iv100", "/iv90","/stop"]]
-    reply_markup = ReplyKeyboardMarkup(
-        keyboard, one_time_keyboard=True, resize_keyboard=True
+    await context.bot.send_message(
+        chat_id=GRUPO_COORDENADAS_ID,
+        message_thread_id=TEMA_ID,
+        text=message_text,
     )
-
-    await update.message.reply_text(message_text, reply_markup=reply_markup)
 
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
