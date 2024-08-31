@@ -20,6 +20,8 @@ To run this project, you'll need to add the following environment variables to y
 
 `PERIOD`
 
+`MESSAGE_THREAD_ID`
+
 Clone the project
 
 ```bash
