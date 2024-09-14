@@ -214,7 +214,7 @@ def generate_pokemon_messages(iv):
                     iv_number = retrieve_pokemon_iv(iv)
                     message_signature = signature(iv)
                     flag = pokemon_data["flag"]
-                    if pokemon_is_alolan(name, move1):
+                    if pokemon_is_alolan(name, move1, move2):
                         name += " de Alola"
 
                     if pokemon_is_galarian(name, move1, move2):
@@ -288,20 +288,18 @@ def pokemon_is_galarian(
     return False
 
 
-def pokemon_is_alolan(pokemon_name: str, pokemon_move_1: str) -> bool:
+def pokemon_is_alolan(
+    pokemon_name: str, pokemon_move_1: str, pokemon_move_2: str
+) -> bool:
 
     if pokemon_name == "Rattata" and (
-        pokemon_move_1 == "Ataque Rápido" or pokemon_move_1 == "Placaje"
+        pokemon_move_2 == "Bola Sombra" or pokemon_move_2 == "Triturar"
     ):
         return True
-    if pokemon_name == "Raticate" and (
-        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Ataque Rápido"
-    ):
+    if pokemon_name == "Raticate" and pokemon_move_2 == "Triturar":
         return True
     if pokemon_name == "Raichu" and (
-        pokemon_move_1 == "Impactrueno"
-        or pokemon_move_1 == "Chispa"
-        or pokemon_move_1 == "Voltiocambio"
+        pokemon_move_2 == "Psíquico" or pokemon_move_1 == "Hierba Lazo"
     ):
         return True
     if pokemon_name == "Sandshrew" and (
@@ -309,9 +307,7 @@ def pokemon_is_alolan(pokemon_name: str, pokemon_move_1: str) -> bool:
     ):
         return True
     if pokemon_name == "Sandslash" and (
-        pokemon_move_1 == "Garra Metal"
-        or pokemon_move_1 == "Nieve Polvo"
-        or pokemon_move_1 == "Garra Umbría"
+        pokemon_move_1 == "Nieve Polvo" or pokemon_move_1 == "Garra Umbría"
     ):
         return True
     if pokemon_name == "Vulpix" and (
@@ -319,66 +315,45 @@ def pokemon_is_alolan(pokemon_name: str, pokemon_move_1: str) -> bool:
     ):
         return True
     if pokemon_name == "Ninetales" and (
-        pokemon_move_1 == "Finta"
-        or pokemon_move_1 == "Nieve Polvo"
-        or pokemon_move_1 == "Encanto"
+        pokemon_move_1 == "Nieve Polvo" or pokemon_move_1 == "Encanto"
     ):
         return True
     if pokemon_name == "Diglett" and (
-        pokemon_move_1 == "Garra Metal"
-        or pokemon_move_1 == "Bofetón Lodo"
-        or pokemon_move_1 == "Ataque Arena"
+        pokemon_move_1 == "Garra Metal" or pokemon_move_1 == "Ataque Arena"
     ):
         return True
     if pokemon_name == "Dugtrio" and (
-        pokemon_move_1 == "Garra Metal"
-        or pokemon_move_1 == "Bofetón Lodo"
-        or pokemon_move_1 == "Ataque Arena"
+        pokemon_move_1 == "Garra Metal" or pokemon_move_1 == "Ataque Arena"
     ):
         return True
-    if pokemon_name == "Meowth" and (
-        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Arañazo"
-    ):
+    if pokemon_name == "Meowth" and pokemon_move_2 == "Abrecaminos":
         return True
     if pokemon_name == "Persian" and (
-        pokemon_move_1 == "Arañazo" or pokemon_move_1 == "Finta"
+        pokemon_move_2 == "Pulso Umbrío" or pokemon_move_2 == "Abrecaminos"
     ):
         return True
-    if pokemon_name == "Geodude" and (
-        pokemon_move_1 == "Lanzarrocas" or pokemon_move_1 == "Voltiocambio"
-    ):
+    if pokemon_name == "Geodude" and pokemon_move_1 == "Voltiocambio":
         return True
-    if pokemon_name == "Graveler" and (
-        pokemon_move_1 == "Disparo Lodo"
-        or pokemon_move_1 == "Lanzarrocas"
-        or pokemon_move_1 == "Bofetón Lodo"
-    ):
+    if pokemon_name == "Graveler" and pokemon_move_1 == "Voltiocambio":
         return True
     if pokemon_name == "Golem" and (
-        pokemon_move_1 == "Disparo Lodo"
-        or pokemon_move_1 == "Lanzarrocas"
-        or pokemon_move_1 == "Bofetón Lodo"
+        pokemon_move_1 == "Voltiocambio" or pokemon_move_1 == "Rodar"
     ):
         return True
     if pokemon_name == "Grimer" and pokemon_move_1 == "Mordisco":
         return True
     if pokemon_name == "Muk" and (
-        pokemon_move_1 == "Mordisco"
-        or pokemon_move_1 == "Puya Nociva"
-        or pokemon_move_1 == "Alarido"
+        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Alarido"
     ):
         return True
-    if pokemon_name == "Exeggutor" and (
-        pokemon_move_1 == "Cola Dragón" or pokemon_move_1 == "Semilladora"
-    ):
+    if pokemon_name == "Exeggutor" and pokemon_move_1 == "Cola Dragón":
         return True
     if pokemon_name == "Marowak" and (
-        pokemon_move_1 == "Golpe Roca"
-        or pokemon_move_1 == "Infortunio"
-        or pokemon_move_1 == "Giro Fuego"
+        pokemon_move_1 == "Infortunio" or pokemon_move_1 == "Giro Fuego"
     ):
         return True
     return False
+
 
 def retrieve_flag(url: str):
     if url == "https://vanpokemap.com/query2.php":
