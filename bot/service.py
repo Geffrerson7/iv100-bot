@@ -212,6 +212,11 @@ def generate_pokemon_messages(iv):
                     ]
                     iv_number = retrieve_pokemon_iv(iv)
                     message_signature = signature(iv)
+                    if pokemon_is_alolan(name, move1):
+                        name += " de Alola"
+
+                    if pokemon_is_galarian(name, move1):
+                        name += " de Galar"
                     message = (
                         f"*🄰* *{name}* {shiny_icon}{gender_icon}\n"
                         f"*🄴* IV:{iv_number} ᴄᴘ:{cp} LV:{level}\n"
@@ -228,3 +233,169 @@ def generate_pokemon_messages(iv):
         logging.error(traceback.format_exc())
         return None
     return total_message
+
+
+def pokemon_is_galarian(pokemon_name: str, pokemon_move_1: str) -> bool:
+
+    if pokemon_name == "Stunfisk" and (
+        pokemon_move_1 == "Disparo Lodo" or pokemon_move_1 == "Garra Metal"
+    ):
+        return True
+    if pokemon_name == "Meowth" and (
+        pokemon_move_1 == "Arañazo" or pokemon_move_1 == "Garra Metal"
+    ):
+        return True
+    if pokemon_name == "Ponyta" and (
+        pokemon_move_1 == "Patada Baja" or pokemon_move_1 == "Psicocorte"
+    ):
+        return True
+    if pokemon_name == "Rapidash" and (
+        pokemon_move_1 == "Patada Baja"
+        or pokemon_move_1 == "Psicocorte"
+        or pokemon_move_1 == "Viento Feérico"
+    ):
+        return True
+    if pokemon_name == "Slowpoke" and (
+        pokemon_move_1 == "Confusión" or pokemon_move_1 == "Cola Férrea"
+    ):
+        return True
+    if pokemon_name == "Slowbro" and (
+        pokemon_move_1 == "Pistola Agua" or pokemon_move_1 == "Confusión"
+    ):
+        return True
+    if pokemon_name == "Farfetch'd" and (
+        pokemon_move_1 == "Corte Furia" or pokemon_move_1 == "Golpe Roca"
+    ):
+        return True
+    if pokemon_name == "Weezing" and (
+        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Viento Feérico"
+    ):
+        return True
+    if pokemon_name == "Mr-Mime" and (
+        pokemon_move_1 == "Cabezazo Zen" or pokemon_move_1 == "Confusión"
+    ):
+        return True
+    if pokemon_name == "Slowking" and (
+        pokemon_move_1 == "Ácido"
+        or pokemon_move_1 == "Confusión"
+        or pokemon_move_1 == "Infortunio"
+    ):
+        return True
+    if pokemon_name == "Zigzagoon" and (
+        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Derribo"
+    ):
+        return True
+    if pokemon_name == "Linoone" and (
+        pokemon_move_1 == "Lengüetazo" or pokemon_move_1 == "Alarido"
+    ):
+        return True
+    if pokemon_name == "Darumaka" and (
+        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Colmillo Hielo"
+    ):
+        return True
+    if pokemon_name == "Darmitan" and (
+        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Colmillo Hielo"
+    ):
+        return True
+    if pokemon_name == "Yamask" and pokemon_move_1 == "Impresionar":
+        return True
+    if pokemon_name == "Stunfisk" and (
+        pokemon_move_1 == "Disparo Lodo" or pokemon_move_1 == "Garra Metal"
+    ):
+        return True
+    return False
+
+
+def pokemon_is_alolan(pokemon_name: str, pokemon_move_1: str) -> bool:
+
+    if pokemon_name == "Rattata" and (
+        pokemon_move_1 == "Ataque Rápido" or pokemon_move_1 == "Placaje"
+    ):
+        return True
+    if pokemon_name == "Raticate" and (
+        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Ataque Rápido"
+    ):
+        return True
+    if pokemon_name == "Raichu" and (
+        pokemon_move_1 == "Impactrueno"
+        or pokemon_move_1 == "Chispa"
+        or pokemon_move_1 == "Voltiocambio"
+    ):
+        return True
+    if pokemon_name == "Sandshrew" and (
+        pokemon_move_1 == "Garra Metal" or pokemon_move_1 == "Nieve Polvo"
+    ):
+        return True
+    if pokemon_name == "Sandslash" and (
+        pokemon_move_1 == "Garra Metal"
+        or pokemon_move_1 == "Nieve Polvo"
+        or pokemon_move_1 == "Garra Umbría"
+    ):
+        return True
+    if pokemon_name == "Vulpix" and (
+        pokemon_move_1 == "Cabezazo Zen" or pokemon_move_1 == "Nieve Polvo"
+    ):
+        return True
+    if pokemon_name == "Ninetales" and (
+        pokemon_move_1 == "Finta"
+        or pokemon_move_1 == "Nieve Polvo"
+        or pokemon_move_1 == "Encanto"
+    ):
+        return True
+    if pokemon_name == "Diglett" and (
+        pokemon_move_1 == "Garra Metal"
+        or pokemon_move_1 == "Bofetón Lodo"
+        or pokemon_move_1 == "Ataque Arena"
+    ):
+        return True
+    if pokemon_name == "Dugtrio" and (
+        pokemon_move_1 == "Garra Metal"
+        or pokemon_move_1 == "Bofetón Lodo"
+        or pokemon_move_1 == "Ataque Arena"
+    ):
+        return True
+    if pokemon_name == "Meowth" and (
+        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Arañazo"
+    ):
+        return True
+    if pokemon_name == "Persian" and (
+        pokemon_move_1 == "Arañazo" or pokemon_move_1 == "Finta"
+    ):
+        return True
+    if pokemon_name == "Geodude" and (
+        pokemon_move_1 == "Lanzarrocas" or pokemon_move_1 == "Voltiocambio"
+    ):
+        return True
+    if pokemon_name == "Graveler" and (
+        pokemon_move_1 == "Disparo Lodo"
+        or pokemon_move_1 == "Lanzarrocas"
+        or pokemon_move_1 == "Bofetón Lodo"
+    ):
+        return True
+    if pokemon_name == "Golem" and (
+        pokemon_move_1 == "Disparo Lodo"
+        or pokemon_move_1 == "Lanzarrocas"
+        or pokemon_move_1 == "Bofetón Lodo"
+    ):
+        return True
+    if pokemon_name == "Grimer" and (
+        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Puya Nociva"
+    ):
+        return True
+    if pokemon_name == "Muk" and (
+        pokemon_move_1 == "Mordisco"
+        or pokemon_move_1 == "Puya Nociva"
+        or pokemon_move_1 == "Alarido"
+    ):
+        return True
+    if pokemon_name == "Exeggutor" and (
+        pokemon_move_1 == "Cola Dragón" or pokemon_move_1 == "Semilladora"
+    ):
+        return True
+    if pokemon_name == "Marowak" and (
+        pokemon_move_1 == "Golpe Roca"
+        or pokemon_move_1 == "Infortunio"
+        or pokemon_move_1 == "Giro Fuego"
+    ):
+        return True
+    return False
