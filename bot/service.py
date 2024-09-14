@@ -38,6 +38,7 @@ def fetch_pokemon_data(iv):
             response.raise_for_status()  # Si ocurre un error, lanzará una excepción
             data = response.json()
             for pokemon in data.get("pokemons", []):
+                pokemon["flag"] = retrieve_flag(url)
                 total_data.append(pokemon)
         except requests.exceptions.RequestException as e:
             logging.warning(f"Failed to fetch data from {url}: {e}")
@@ -212,10 +213,11 @@ def generate_pokemon_messages(iv):
                     ]
                     iv_number = retrieve_pokemon_iv(iv)
                     message_signature = signature(iv)
+                    flag = pokemon_data["flag"]
                     if pokemon_is_alolan(name, move1):
                         name += " de Alola"
 
-                    if pokemon_is_galarian(name, move1):
+                    if pokemon_is_galarian(name, move1, move2):
                         name += " de Galar"
                     message = (
                         f"*🄰* *{name}* {shiny_icon}{gender_icon}\n"
@@ -223,6 +225,7 @@ def generate_pokemon_messages(iv):
                         f"{move1_icon}{move1} \| {move2_icon}{move2}\n"
                         f"{message_signature}"
                         f"⌚ᴅsᴘ {dsp}\n"
+                        f"{flag}\n"
                         f"`{latitude},{longitude}`"
                     )
                     total_message.append(message)
@@ -235,74 +238,53 @@ def generate_pokemon_messages(iv):
     return total_message
 
 
-def pokemon_is_galarian(pokemon_name: str, pokemon_move_1: str) -> bool:
+def pokemon_is_galarian(
+    pokemon_name: str, pokemon_move_1: str, pokemon_move_2: str
+) -> bool:
 
-    if pokemon_name == "Stunfisk" and (
-        pokemon_move_1 == "Disparo Lodo" or pokemon_move_1 == "Garra Metal"
-    ):
+    if pokemon_name == "Stunfisk" and pokemon_move_1 == "Garra Metal":
         return True
-    if pokemon_name == "Meowth" and (
-        pokemon_move_1 == "Arañazo" or pokemon_move_1 == "Garra Metal"
-    ):
+    if pokemon_name == "Meowth" and pokemon_move_1 == "Garra Metal":
         return True
     if pokemon_name == "Ponyta" and (
         pokemon_move_1 == "Patada Baja" or pokemon_move_1 == "Psicocorte"
     ):
         return True
     if pokemon_name == "Rapidash" and (
-        pokemon_move_1 == "Patada Baja"
-        or pokemon_move_1 == "Psicocorte"
-        or pokemon_move_1 == "Viento Feérico"
+        pokemon_move_1 == "Psicocorte" or pokemon_move_1 == "Viento Feérico"
     ):
         return True
-    if pokemon_name == "Slowpoke" and (
-        pokemon_move_1 == "Confusión" or pokemon_move_1 == "Cola Férrea"
-    ):
+    if pokemon_name == "Slowpoke" and pokemon_move_1 == "Cola Férrea":
         return True
-    if pokemon_name == "Slowbro" and (
-        pokemon_move_1 == "Pistola Agua" or pokemon_move_1 == "Confusión"
-    ):
+    if pokemon_name == "Slowbro" and pokemon_move_1 == "Puya Nociva":
         return True
-    if pokemon_name == "Farfetch'd" and (
-        pokemon_move_1 == "Corte Furia" or pokemon_move_1 == "Golpe Roca"
-    ):
+    if pokemon_name == "Farfetch'd" and pokemon_move_1 == "Golpe Roca":
         return True
-    if pokemon_name == "Weezing" and (
-        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Viento Feérico"
-    ):
+    if pokemon_name == "Weezing" and pokemon_move_1 == "Viento Feérico":
         return True
     if pokemon_name == "Mr-Mime" and (
-        pokemon_move_1 == "Cabezazo Zen" or pokemon_move_1 == "Confusión"
+        pokemon_move_2 == "Puño Hielo" or pokemon_move_2 == "Triple Axel"
     ):
         return True
     if pokemon_name == "Slowking" and (
-        pokemon_move_1 == "Ácido"
-        or pokemon_move_1 == "Confusión"
-        or pokemon_move_1 == "Infortunio"
+        pokemon_move_1 == "Ácido" or pokemon_move_1 == "Infortunio"
     ):
         return True
-    if pokemon_name == "Zigzagoon" and (
-        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Derribo"
-    ):
+    if pokemon_name == "Zigzagoon" and pokemon_move_1 == "Derribo":
         return True
     if pokemon_name == "Linoone" and (
         pokemon_move_1 == "Lengüetazo" or pokemon_move_1 == "Alarido"
     ):
         return True
-    if pokemon_name == "Darumaka" and (
-        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Colmillo Hielo"
+    if pokemon_name == "Darumaka" and pokemon_move_1 == "Colmillo Hielo":
+        return True
+    if pokemon_name == "Darmitan" and pokemon_move_1 == "Colmillo Hielo":
+        return True
+    if pokemon_name == "Yamask" and (
+        pokemon_move_2 == "Tumba Rocas" or pokemon_move_2 == "Tinieblas"
     ):
         return True
-    if pokemon_name == "Darmitan" and (
-        pokemon_move_1 == "Placaje" or pokemon_move_1 == "Colmillo Hielo"
-    ):
-        return True
-    if pokemon_name == "Yamask" and pokemon_move_1 == "Impresionar":
-        return True
-    if pokemon_name == "Stunfisk" and (
-        pokemon_move_1 == "Disparo Lodo" or pokemon_move_1 == "Garra Metal"
-    ):
-        return True
+
     return False
 
 
@@ -378,9 +360,7 @@ def pokemon_is_alolan(pokemon_name: str, pokemon_move_1: str) -> bool:
         or pokemon_move_1 == "Bofetón Lodo"
     ):
         return True
-    if pokemon_name == "Grimer" and (
-        pokemon_move_1 == "Mordisco" or pokemon_move_1 == "Puya Nociva"
-    ):
+    if pokemon_name == "Grimer" and pokemon_move_1 == "Mordisco":
         return True
     if pokemon_name == "Muk" and (
         pokemon_move_1 == "Mordisco"
@@ -399,3 +379,15 @@ def pokemon_is_alolan(pokemon_name: str, pokemon_move_1: str) -> bool:
     ):
         return True
     return False
+
+def retrieve_flag(url: str):
+    if url == "https://vanpokemap.com/query2.php":
+        return "🇨🇦Vancouver, Canadá"
+    elif url == "https://nycpokemap.com/query2.php":
+        return "🇺🇸Nueva York, Estados Unidos"
+    elif url == "https://londonpogomap.com/query2.php":
+        return "🇬🇧Londres, Reino Unido"
+    elif url == "https://sgpokemap.com/query2.php":
+        return "🇸🇬Singapur, Singapur"
+    elif url == "https://sydneypogomap.com/query2.php":
+        return "🇦🇺Sydney, Australia"
