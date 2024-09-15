@@ -48,24 +48,25 @@ def fetch_pokemon_data(iv):
     return total_data
 
 
-def retrieve_pokemon_name(pokemon_id):
-    """Gets the name of a Pokémon based on its ID using the PokeAPI."""
+def retrieve_pokemon_name(pokemon_id, filename="./data/pokemon_data.json"):
+    """Returns the name of the Pokémon by its ID from a JSON file."""
     try:
-        pokeapi_url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_id}"
-        response = requests.get(pokeapi_url)
-        response.raise_for_status()
+        # Cargar el archivo JSON con los datos de los Pokémon
+        with open(filename, "r") as json_file:
+            pokemon_list = json.load(json_file)
 
-        data = response.json()
-        name = data.get("name")
+        # Buscar el Pokémon por su ID
+        for pokemon in pokemon_list:
+            if pokemon.get("id") == pokemon_id:
+                return pokemon.get("name")
 
-        return name
-    except requests.exceptions.RequestException as e:
-        logging.warning(f"Error fetching Pokémon name for ID {pokemon_id}: {e}")
-    except ValueError as e:
-        logging.error(f"Error decoding JSON response from PokeAPI: {e}")
+        # Si no se encuentra el Pokémon
+        return f"No Pokemon found with ID {pokemon_id}"
 
-    return None
-
+    except FileNotFoundError:
+        return f"File '{filename}' not found."
+    except json.JSONDecodeError:
+        return "Error decoding the JSON file."
 
 def calculate_remaining_time(despawn, delay):
     """Obtains the despawn time and calculates the remaining time until then."""

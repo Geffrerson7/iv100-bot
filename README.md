@@ -82,4 +82,4 @@ Stop sending coordinates:
 
 ## Demo
 
-[![](https://markdown-videos-api.jorgenkh.no/youtube/JmVROMN3D1s)](https://youtu.be/JmVROMN3D1s "IV 100 Telegram Bot Demo Video")
+[![](https://markdown-videos-api.jorgenkh.no/youtube/bGI4qAefg_c)](https://youtu.be/bGI4qAefg_c "IV 100 Telegram Bot Demo Video")
